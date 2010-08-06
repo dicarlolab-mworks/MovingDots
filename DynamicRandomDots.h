@@ -10,25 +10,57 @@
 #ifndef DynamicRandomDots_H_
 #define DynamicRandomDots_H_
 
-#include <MWorksCore/Plugin.h>
+#include <MWorksCore/DynamicStimulusDriver.h>
+#include <MWorksCore/Stimulus.h>
 
 using namespace mw;
 
 
-class DynamicRandomDots : public mw::Component {
+class DynamicRandomDots : public DynamicStimulusDriver, public Stimulus {
 
-protected:
+private:
     shared_ptr<Variable> direction;
     shared_ptr<Variable> speed;
+    
+	DynamicRandomDots(const DynamicRandomDots &tocopy);
 
 public:
 	DynamicRandomDots(const std::string &tag,
+                      shared_ptr<Scheduler> scheduler,
+                      shared_ptr<StimulusDisplay> display,
+                      shared_ptr<Variable> framesPerSecond,
                       shared_ptr<Variable> direction,
                       shared_ptr<Variable> speed);
-	DynamicRandomDots(const DynamicRandomDots &tocopy);
-	~DynamicRandomDots();
-
+    
+	virtual ~DynamicRandomDots();
+    
+    virtual Datum getCurrentAnnounceDrawData();
+    virtual void draw(shared_ptr<StimulusDisplay> display);
+    
 };
 
 
 #endif 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

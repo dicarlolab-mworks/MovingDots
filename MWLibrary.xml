@@ -1,5 +1,5 @@
 <MWElements>
-  <MWElement name="My MW Component">
+  <MWElement name="Dynamic Random Dots">
     <match_signature>stimulus[@type="dynamic_random_dots"]</match_signature>
     
     <isa>Stimulus</isa>
@@ -10,7 +10,12 @@
     
     <!-- Payload -->
     <code>
-      <stimulus type="dynamic_random_dots" tag="Dynamic Random Dots" direction="" speed=""/>
+      <stimulus type="dynamic_random_dots"
+                tag="Dynamic Random Dots"
+                frames_per_second="60"
+                direction=""
+                speed=""
+                />
     </code>
   </MWElement>
 </MWElements>
