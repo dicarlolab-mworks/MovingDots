@@ -143,12 +143,12 @@
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				5CFE59180F571B15000C7F30 /* DynamicRandomDots.h */,
+				5CFE59190F571B15000C7F30 /* DynamicRandomDots.cpp */,
 				5CF9AEB80FD5795C00F405F6 /* DynamicRandomDotsFactory.h */,
 				5CF9AEB70FD5795C00F405F6 /* DynamicRandomDotsFactory.cpp */,
 				5CF9AEBA0FD5795C00F405F6 /* DynamicRandomDotsPlugin.h */,
 				5CF9AEB90FD5795C00F405F6 /* DynamicRandomDotsPlugin.cpp */,
-				5CFE59180F571B15000C7F30 /* DynamicRandomDots.h */,
-				5CFE59190F571B15000C7F30 /* DynamicRandomDots.cpp */,
 			);
 			name = Classes;
 			sourceTree = "<group>";

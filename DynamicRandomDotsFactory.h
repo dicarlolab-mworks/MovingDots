@@ -7,18 +7,18 @@
  *
  */
 
+#ifndef DynamicRandomDots_FACTORY_H_
+#define DynamicRandomDots_FACTORY_H_
 
-#ifndef DynamicRandomDots_FACTORY_H
-#define DynamicRandomDots_FACTORY_H
+#include <MWorksCore/ComponentFactory.h>
 
-#include "DynamicRandomDots.h"
-
-#include "MWorksCore/ComponentFactory.h"
 using namespace mw;
+
 
 class DynamicRandomDotsFactory : public ComponentFactory {
 	virtual shared_ptr<mw::Component> createObject(std::map<std::string, std::string> parameters,
-                                                   mw::ComponentRegistry *reg);
+                                                   ComponentRegistry *reg);
 };
+
 
 #endif

@@ -14,6 +14,7 @@
 
 using namespace mw;
 
+
 class DynamicRandomDots : public mw::Component {
 
 protected:
@@ -25,5 +26,6 @@ public:
 	~DynamicRandomDots();
 
 };
+
 
 #endif 

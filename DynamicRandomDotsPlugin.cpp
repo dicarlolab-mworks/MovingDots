@@ -7,21 +7,20 @@
  *
  */
 
+#include <MWorksCore/ComponentFactory.h>
+
 #include "DynamicRandomDotsPlugin.h"
 #include "DynamicRandomDotsFactory.h"
-#include "MWorksCore/ComponentFactory.h"
+
 using namespace mw;
 
-Plugin *getPlugin(){
+
+Plugin* getPlugin() {
     return new DynamicRandomDotsPlugin();
 }
 
 
-void DynamicRandomDotsPlugin::registerComponents(shared_ptr<mw::ComponentRegistry> registry) {
-	
-    // TODO: you need to customize the "signature" of the object your plugin will create
-    //       The signature is of the form component/type Ð(e.g. stimulus/circle, or iodevice/NIDAQ)
-    registry->registerFactory(std::string("stimulus/DynamicRandomDots"),
+void DynamicRandomDotsPlugin::registerComponents(shared_ptr<ComponentRegistry> registry) {
+    registry->registerFactory(std::string("stimulus/dynamic_random_dots"),
 							  (ComponentFactory *)(new DynamicRandomDotsFactory()));
 }
-
