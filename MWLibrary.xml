@@ -1,24 +1,16 @@
 <MWElements>
   <MWElement name="My MW Component">
-    <!-- XPath 2.0 expression defining nodes of this type -->
-    <!-- -->
-    <match_signature>stimulus[@type="my_mw_component"]</match_signature>
+    <match_signature>stimulus[@type="dynamic_random_dots"]</match_signature>
     
-    <!-- Which super-types does the object belong to -->
     <isa>Stimulus</isa>
     
     <description>
-      Describe your custom component here.
+      A dynamic random dots stimulus.
     </description>
     
     <!-- Payload -->
-    <!-- This XML gets inserted when you drop this object into the project -->
     <code>
-      <stimulus type="my_mw_component" tag="My MW Stimulus"/>
-      <!-- <action type="my_mw_component" tag="My MW Action" />
-        ... you get the idea ...
-        ...
-        -->
+      <stimulus type="dynamic_random_dots" tag="Dynamic Random Dots" direction="" speed=""/>
     </code>
   </MWElement>
 </MWElements>
