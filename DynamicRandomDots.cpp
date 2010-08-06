@@ -10,6 +10,16 @@
 #include "DynamicRandomDots.h"
 
 
-DynamicRandomDots::DynamicRandomDots(std::string _tag, shared_ptr<Variable> another_attribute){ }
+DynamicRandomDots::DynamicRandomDots(const std::string &tag,
+                                     shared_ptr<Variable> direction,
+                                     shared_ptr<Variable> speed) :
+    direction(direction),
+    speed(speed)
+{
+}
+
+
 DynamicRandomDots::DynamicRandomDots(const DynamicRandomDots &tocopy){ }
+
+
 DynamicRandomDots::~DynamicRandomDots(){ }

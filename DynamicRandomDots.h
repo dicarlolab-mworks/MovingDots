@@ -18,10 +18,13 @@ using namespace mw;
 class DynamicRandomDots : public mw::Component {
 
 protected:
-
+    shared_ptr<Variable> direction;
+    shared_ptr<Variable> speed;
 
 public:
-	DynamicRandomDots(std::string _tag, shared_ptr<Variable> another_attribute);
+	DynamicRandomDots(const std::string &tag,
+                      shared_ptr<Variable> direction,
+                      shared_ptr<Variable> speed);
 	DynamicRandomDots(const DynamicRandomDots &tocopy);
 	~DynamicRandomDots();
 

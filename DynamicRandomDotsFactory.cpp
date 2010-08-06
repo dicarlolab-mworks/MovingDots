@@ -7,7 +7,6 @@
  *
  */
 
-//#include <boost/regex.hpp>
 #include <MWorksCore/ComponentRegistry.h>
 
 #include "DynamicRandomDotsFactory.h"
@@ -19,16 +18,48 @@ using namespace mw;
 shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::string, std::string> parameters,
                                                                  ComponentRegistry *reg)
 {
-	REQUIRE_ATTRIBUTES(parameters, 
-					   "tag",
-                       "another_attribute");
-	
-	std::string tagname(parameters["tag"]);
+    const char* TAG = "tag";
+    const char* DIRECTION = "direction";
+    const char* SPEED = "speed";
 
+	REQUIRE_ATTRIBUTES(parameters, 
+					   TAG,
+                       DIRECTION,
+                       SPEED);
+	
+	std::string tag(parameters[TAG]);
+
+	shared_ptr<Variable> direction(reg->getVariable(parameters[DIRECTION]));
+	CHECK_ATTRIBUTE(direction, parameters, DIRECTION);
     
-	shared_ptr<Variable> another_attribute = reg->getVariable(parameters["another_attribute"]);	
+	shared_ptr<Variable> speed(reg->getVariable(parameters[SPEED]));
+	CHECK_ATTRIBUTE(speed, parameters, SPEED);
 	
-	shared_ptr<DynamicRandomDots> new_component = shared_ptr<DynamicRandomDots>(new DynamicRandomDots(tagname, another_attribute));
+	shared_ptr<DynamicRandomDots> newComponent(new DynamicRandomDots(tag,
+                                                                     direction,
+                                                                     speed));
 	
-	return new_component;
+	return newComponent;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
