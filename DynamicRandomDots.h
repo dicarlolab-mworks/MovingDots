@@ -22,6 +22,12 @@ private:
     shared_ptr<Variable> direction;
     shared_ptr<Variable> speed;
     
+    static const GLint verticesPerPoint = 2;
+    GLint numPoints;
+    shared_array<GLfloat> points;
+
+    GLfloat pointSize;
+    
 	DynamicRandomDots(const DynamicRandomDots &tocopy);
 
 public:
@@ -34,8 +40,10 @@ public:
     
 	virtual ~DynamicRandomDots();
     
-    virtual Datum getCurrentAnnounceDrawData();
+    void initializeDots();
+    
     virtual void draw(shared_ptr<StimulusDisplay> display);
+    virtual Datum getCurrentAnnounceDrawData();
     
 };
 
