@@ -24,7 +24,7 @@ private:
     
     static const GLint verticesPerPoint = 2;
     GLint numPoints;
-    shared_array<GLfloat> points;
+    std::vector<GLfloat> points;
 
     GLfloat pointSize;
     

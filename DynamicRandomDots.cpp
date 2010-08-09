@@ -23,9 +23,9 @@ DynamicRandomDots::DynamicRandomDots(const std::string &tag,
     direction(direction),
     speed(speed),
     numPoints(1000),
-    pointSize(2.0f)
+    pointSize(4.0f)
 {
-    points = shared_array<GLfloat>(new GLfloat[numPoints * verticesPerPoint]);
+    points.resize(numPoints * verticesPerPoint);
     initializeDots();
     
     /*GLfloat sizes[2];
@@ -51,20 +51,30 @@ void DynamicRandomDots::initializeDots() {
 
 
 void DynamicRandomDots::draw(shared_ptr<StimulusDisplay> display) {
+    // Enable antialiasing so points are round, not square
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
+
     glEnableClientState(GL_VERTEX_ARRAY);
 
     glPointSize(pointSize);
-    glVertexPointer(verticesPerPoint, GL_FLOAT, 0, points.get());
+    glVertexPointer(verticesPerPoint, GL_FLOAT, 0, &(points[0]));
     glDrawArrays(GL_POINTS, 0, numPoints);
 
     glDisableClientState(GL_VERTEX_ARRAY);
+    
+    glDisable(GL_BLEND);
+    glDisable(GL_POINT_SMOOTH);
 }
 
 
 Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
 	boost::mutex::scoped_lock locker(stim_lock);
 	Datum announceData = DynamicStimulusDriver::getCurrentAnnounceDrawData();
-	announceData.addElement(STIM_NAME, "DynamicRandomDots");
+	announceData.addElement(STIM_NAME, "Dynamic Random Dots");
 	announceData.addElement(STIM_TYPE, "dynamic_random_dots");  
 	return announceData;
 }
