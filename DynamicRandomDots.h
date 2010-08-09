@@ -26,6 +26,7 @@ private:
     std::vector<GLfloat> dots;
     GLint numDots;
     GLfloat dotSize;
+    std::vector<GLfloat> dotSizeInPixels;
     GLfloat fieldRadius;
     
     MWTime previousTime, currentTime;
@@ -33,6 +34,7 @@ private:
     DynamicRandomDots(const DynamicRandomDots &tocopy);
 
     void validateParameters();
+    void computeDotSizeInPixels();
     void initializeDots();
     void updateDots();
 

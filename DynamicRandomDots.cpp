@@ -38,39 +38,64 @@ DynamicRandomDots::~DynamicRandomDots() { }
 
 
 void DynamicRandomDots::validateParameters() {
-    //
-    // Validate num_dots
-    //
-    
     if (numDots < 1) {
         throw SimpleException("number of dots must be greater than or equal to 1");
     }
     
-    //
-    // Validate dot_size
-    //
+    if (dotSize <= 0.0f) {
+        throw SimpleException("dot size must be greater than 0");
+    }
+}
+
+
+void DynamicRandomDots::computeDotSizeInPixels() {
+    GLdouble xMin, xMax, yMin, yMax;
+    display->getDisplayBounds(xMin, xMax, yMin, yMax);
     
-    GLfloat bounds[2];
-    glGetFloatv(GL_POINT_SIZE_RANGE, bounds);
-    
-    if (dotSize < bounds[0]) {
+    for (int i = 0; i < display->getNContexts(); i++) {
+        display->setCurrent(i);
+
+        GLint viewport[4];
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        GLfloat width = (GLfloat)(viewport[2]);
         
-        mwarning(M_PLUGIN_MESSAGE_DOMAIN, "dot size (%g) is too small; using %g instead", dotSize, bounds[0]);
-        dotSize = bounds[0];
+        GLfloat pointSize = dotSize / (xMax - xMin) * width;
         
-    } else if (dotSize > bounds[1]) {
-        
-        mwarning(M_PLUGIN_MESSAGE_DOMAIN, "dot size (%g) is too large; using %g instead", dotSize, bounds[1]);
-        dotSize = bounds[1];
-        
-    } else {
-        
-        GLfloat step;
-        glGetFloatv(GL_POINT_SIZE_GRANULARITY, &step);
-        if (fmod(dotSize - bounds[0], step) != 0.0f) {
-            mwarning(M_PLUGIN_MESSAGE_DOMAIN, "dot size (%g) is not aligned with point size step (%g)", dotSize, step);
+        /*
+        GLfloat bounds[2];
+        glGetFloatv(GL_POINT_SIZE_RANGE, bounds);
+
+        if (pointSize < bounds[0]) {
+            
+            mwarning(M_PLUGIN_MESSAGE_DOMAIN,
+                     "dot size in pixels (%g) is too small; using %g instead",
+                     pointSize,
+                     bounds[0]);
+            pointSize = bounds[0];
+            
+        } else if (pointSize > bounds[1]) {
+            
+            mwarning(M_PLUGIN_MESSAGE_DOMAIN,
+                     "dot size in pixels (%g) is too large; using %g instead",
+                     pointSize,
+                     bounds[1]);
+            pointSize = bounds[1];
+            
+        } else {
+            
+            GLfloat step;
+            glGetFloatv(GL_POINT_SIZE_GRANULARITY, &step);
+            if (fmod(pointSize - bounds[0], step) != 0.0f) {
+                mwarning(M_PLUGIN_MESSAGE_DOMAIN,
+                         "dot size in pixels (%g) is not aligned with point size step (%g)",
+                         pointSize,
+                         step);
+            }
+            
         }
+        */
         
+        dotSizeInPixels.push_back(pointSize);
     }
 }
 
@@ -119,6 +144,7 @@ void DynamicRandomDots::updateDots() {
 
 
 void DynamicRandomDots::willPlay() {
+    computeDotSizeInPixels();
     previousTime = 0;
 }
 
@@ -152,7 +178,7 @@ void DynamicRandomDots::draw(shared_ptr<StimulusDisplay> display) {
 
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    glPointSize(dotSize);
+    glPointSize(dotSizeInPixels[display->getCurrentContextIndex()]);
     glVertexPointer(verticesPerDot, GL_FLOAT, 0, &(dots[0]));
     glDrawArrays(GL_POINTS, 0, numDots);
 
