@@ -49,6 +49,8 @@ void DynamicRandomDots::validateParameters() {
 
 
 void DynamicRandomDots::computeDotSizeInPixels() {
+    dotSizeInPixels.clear();
+    
     GLdouble xMin, xMax, yMin, yMax;
     display->getDisplayBounds(xMin, xMax, yMin, yMax);
     
