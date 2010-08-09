@@ -26,16 +26,18 @@ private:
     std::vector<GLfloat> dots;
     GLint numDots;
     GLfloat dotSize;
-    
     GLfloat fieldRadius;
     
-	DynamicRandomDots(const DynamicRandomDots &tocopy);
+    MWTime previousTime, currentTime;
+    
+    DynamicRandomDots(const DynamicRandomDots &tocopy);
 
     void validateParameters();
     void initializeDots();
+    void updateDots();
 
 public:
-	DynamicRandomDots(const std::string &tag,
+    DynamicRandomDots(const std::string &tag,
                       shared_ptr<Scheduler> scheduler,
                       shared_ptr<StimulusDisplay> display,
                       shared_ptr<Variable> framesPerSecond,
@@ -44,7 +46,10 @@ public:
                       shared_ptr<Variable> direction,
                       shared_ptr<Variable> speed);
     
-	virtual ~DynamicRandomDots();
+    virtual ~DynamicRandomDots();
+    
+    virtual void willPlay();
+    virtual void didStop();
     
     virtual void draw(shared_ptr<StimulusDisplay> display);
     virtual Datum getCurrentAnnounceDrawData();

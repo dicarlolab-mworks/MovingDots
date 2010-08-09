@@ -93,7 +93,56 @@ void DynamicRandomDots::initializeDots() {
 }
 
 
+void DynamicRandomDots::updateDots() {
+    const GLfloat v = speed->getValue().getFloat();
+    const GLfloat theta = direction->getValue().getFloat();
+    
+    const GLfloat dt = (GLfloat)(currentTime - previousTime) / 1.0e6f;
+    const GLfloat dx = v * cos(theta) * dt;
+    const GLfloat dy = v * sin(theta) * dt;
+
+    for (GLint i = 0; i < (numDots * verticesPerDot); i += 2) {
+        GLfloat &x = dots[i];
+        GLfloat &y = dots[i+1];
+        
+        GLfloat newX = x + dx;
+        GLfloat newY = y + dy;
+        if (newX*newX + newY*newY > fieldRadius*fieldRadius) {
+            newX *= -1.0f;
+            newY *= -1.0f;
+        }
+        
+        x = newX;
+        y = newY;
+    }
+}
+
+
+void DynamicRandomDots::willPlay() {
+    previousTime = 0;
+}
+
+
+void DynamicRandomDots::didStop() {
+    previousTime = -1;
+}
+
+
 void DynamicRandomDots::draw(shared_ptr<StimulusDisplay> display) {
+    boost::mutex::scoped_lock locker(stim_lock);
+    
+    currentTime = getElapsedTime();
+    if (-1 == currentTime) {
+        // Not playing
+        return;
+    }
+    
+    // If we're drawing to the main display, update dot positions
+    if (display->getCurrentContextIndex() == 0) {
+        updateDots();
+        previousTime = currentTime;
+    }
+
     // Enable antialiasing so dots are round, not square
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
