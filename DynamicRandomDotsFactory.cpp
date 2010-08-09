@@ -20,11 +20,16 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
 {
     const char* TAG = "tag";
     const char* FRAMES_PER_SECOND = "frames_per_second";
+    const char* NUM_DOTS = "num_dots";
+    const char* DOT_SIZE = "dot_size";
     const char* DIRECTION = "direction";
     const char* SPEED = "speed";
 
 	REQUIRE_ATTRIBUTES(parameters, 
 					   TAG,
+                       FRAMES_PER_SECOND,
+                       NUM_DOTS,
+                       DOT_SIZE,
                        DIRECTION,
                        SPEED);
 	
@@ -32,6 +37,12 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
     
 	shared_ptr<Variable> framesPerSecond(reg->getVariable(parameters[FRAMES_PER_SECOND]));
 	CHECK_ATTRIBUTE(framesPerSecond, parameters, FRAMES_PER_SECOND);
+    
+	shared_ptr<Variable> numDots(reg->getVariable(parameters[NUM_DOTS]));
+	CHECK_ATTRIBUTE(numDots, parameters, NUM_DOTS);
+    
+	shared_ptr<Variable> dotSize(reg->getVariable(parameters[DOT_SIZE]));
+	CHECK_ATTRIBUTE(dotSize, parameters, DOT_SIZE);
     
 	shared_ptr<Variable> direction(reg->getVariable(parameters[DIRECTION]));
 	CHECK_ATTRIBUTE(direction, parameters, DIRECTION);
@@ -57,6 +68,8 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
                                                                      scheduler,
                                                                      display,
                                                                      framesPerSecond,
+                                                                     numDots,
+                                                                     dotSize,
                                                                      direction,
                                                                      speed));
     

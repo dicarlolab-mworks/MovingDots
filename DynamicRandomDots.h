@@ -22,25 +22,27 @@ private:
     shared_ptr<Variable> direction;
     shared_ptr<Variable> speed;
     
-    static const GLint verticesPerPoint = 2;
-    GLint numPoints;
-    std::vector<GLfloat> points;
-
-    GLfloat pointSize;
+    static const GLint verticesPerDot = 2;
+    std::vector<GLfloat> dots;
+    GLint numDots;
+    GLfloat dotSize;
     
 	DynamicRandomDots(const DynamicRandomDots &tocopy);
+
+    void validateParameters();
+    void initializeDots();
 
 public:
 	DynamicRandomDots(const std::string &tag,
                       shared_ptr<Scheduler> scheduler,
                       shared_ptr<StimulusDisplay> display,
                       shared_ptr<Variable> framesPerSecond,
+                      shared_ptr<Variable> numDots,
+                      shared_ptr<Variable> dotSize,
                       shared_ptr<Variable> direction,
                       shared_ptr<Variable> speed);
     
 	virtual ~DynamicRandomDots();
-    
-    void initializeDots();
     
     virtual void draw(shared_ptr<StimulusDisplay> display);
     virtual Datum getCurrentAnnounceDrawData();
