@@ -133,8 +133,8 @@ void DynamicRandomDots::updateDots() {
         GLfloat newX = x + dx;
         GLfloat newY = y + dy;
         if (newX*newX + newY*newY > fieldRadius*fieldRadius) {
-            newX *= -1.0f;
-            newY *= -1.0f;
+            newX = -x;
+            newY = -y;
         }
         
         x = newX;
