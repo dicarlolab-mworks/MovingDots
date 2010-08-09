@@ -27,6 +27,8 @@ private:
     GLint numDots;
     GLfloat dotSize;
     
+    GLfloat fieldRadius;
+    
 	DynamicRandomDots(const DynamicRandomDots &tocopy);
 
     void validateParameters();

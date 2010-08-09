@@ -23,7 +23,8 @@ DynamicRandomDots::DynamicRandomDots(const std::string &tag,
     DynamicStimulusDriver(scheduler, display, framesPerSecond),
     Stimulus(tag),
     direction(direction),
-    speed(speed)
+    speed(speed),
+    fieldRadius(10.0f)
 {
     this->numDots = numDots->getValue().getInteger();
     this->dotSize = dotSize->getValue().getFloat();
@@ -78,11 +79,16 @@ void DynamicRandomDots::initializeDots() {
     dots.resize(numDots * verticesPerDot);
 
     boost::mt19937 randGen;
-    boost::uniform_real<GLfloat> randDist(-10.0, 10.0);
+    boost::uniform_real<GLfloat> randDist(-fieldRadius, fieldRadius);
     boost::variate_generator< boost::mt19937&, boost::uniform_real<GLfloat> > rand(randGen, randDist);
     
-    for (GLint i = 0; i < (numDots * verticesPerDot); i++) {
-        dots[i] = rand();
+    for (GLint i = 0; i < (numDots * verticesPerDot); i += 2) {
+        GLfloat &x = dots[i];
+        GLfloat &y = dots[i+1];
+        do {
+            x = rand();
+            y = rand();
+        } while (x*x + y*y > fieldRadius*fieldRadius);
     }
 }
 
