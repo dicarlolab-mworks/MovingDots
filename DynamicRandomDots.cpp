@@ -14,6 +14,9 @@ DynamicRandomDots::DynamicRandomDots(const std::string &tag,
                                      shared_ptr<Scheduler> scheduler,
                                      shared_ptr<StimulusDisplay> display,
                                      shared_ptr<Variable> framesPerSecond,
+                                     shared_ptr<Variable> fieldRadius,
+                                     shared_ptr<Variable> fieldCenterX,
+                                     shared_ptr<Variable> fieldCenterY,
                                      shared_ptr<Variable> numDots,
                                      shared_ptr<Variable> dotSize,
                                      shared_ptr<Variable> direction,
@@ -21,9 +24,11 @@ DynamicRandomDots::DynamicRandomDots(const std::string &tag,
     DynamicStimulusDriver(scheduler, display, framesPerSecond),
     Stimulus(tag),
     direction(direction),
-    speed(speed),
-    fieldRadius(10.0f)
+    speed(speed)
 {
+    this->fieldRadius = fieldRadius->getValue().getFloat();
+    this->fieldCenterX = fieldCenterX->getValue().getFloat();
+    this->fieldCenterY = fieldCenterY->getValue().getFloat();
     this->numDots = numDots->getValue().getInteger();
     this->dotSize = dotSize->getValue().getFloat();
     
@@ -36,6 +41,10 @@ DynamicRandomDots::~DynamicRandomDots() { }
 
 
 void DynamicRandomDots::validateParameters() {
+    if (fieldRadius <= 0.0f) {
+        throw SimpleException("field radius must be greater than 0");
+    }
+
     if (numDots < 1) {
         throw SimpleException("number of dots must be greater than or equal to 1");
     }
@@ -59,43 +68,7 @@ void DynamicRandomDots::computeDotSizeInPixels() {
         glGetIntegerv(GL_VIEWPORT, viewport);
         GLfloat width = (GLfloat)(viewport[2]);
         
-        GLfloat pointSize = dotSize / (xMax - xMin) * width;
-        
-        /*
-        GLfloat bounds[2];
-        glGetFloatv(GL_POINT_SIZE_RANGE, bounds);
-
-        if (pointSize < bounds[0]) {
-            
-            mwarning(M_PLUGIN_MESSAGE_DOMAIN,
-                     "dot size in pixels (%g) is too small; using %g instead",
-                     pointSize,
-                     bounds[0]);
-            pointSize = bounds[0];
-            
-        } else if (pointSize > bounds[1]) {
-            
-            mwarning(M_PLUGIN_MESSAGE_DOMAIN,
-                     "dot size in pixels (%g) is too large; using %g instead",
-                     pointSize,
-                     bounds[1]);
-            pointSize = bounds[1];
-            
-        } else {
-            
-            GLfloat step;
-            glGetFloatv(GL_POINT_SIZE_GRANULARITY, &step);
-            if (fmod(pointSize - bounds[0], step) != 0.0f) {
-                mwarning(M_PLUGIN_MESSAGE_DOMAIN,
-                         "dot size in pixels (%g) is not aligned with point size step (%g)",
-                         pointSize,
-                         step);
-            }
-            
-        }
-        */
-        
-        dotSizeInPixels.push_back(pointSize);
+        dotSizeInPixels.push_back(dotSize / (xMax - xMin) * width);
     }
 }
 
@@ -106,10 +79,14 @@ void DynamicRandomDots::initializeDots() {
     for (GLint i = 0; i < (numDots * verticesPerDot); i += verticesPerDot) {
         GLfloat &x = dots[i];
         GLfloat &y = dots[i+1];
+
         do {
             x = rand(-fieldRadius, fieldRadius);
             y = rand(-fieldRadius, fieldRadius);
         } while (x*x + y*y > fieldRadius*fieldRadius);
+
+        x += fieldCenterX;
+        y += fieldCenterY;
     }
 }
 
@@ -128,13 +105,19 @@ void DynamicRandomDots::updateDots() {
         
         x += dx;
         y += dy;
+        
+        GLfloat x1 = x - fieldCenterX;
+        GLfloat y1 = y - fieldCenterY;
 
-        if (x*x + y*y > fieldRadius*fieldRadius) {
-            GLfloat y1 = rand(-fieldRadius, fieldRadius);
-            GLfloat x1 = -sqrt(fieldRadius*fieldRadius - y1*y1) + rand(0.0f, dr);
+        if (x1*x1 + y1*y1 > fieldRadius*fieldRadius) {
+            y1 = rand(-fieldRadius, fieldRadius);
+            x1 = -sqrt(fieldRadius*fieldRadius - y1*y1) + rand(0.0f, dr);
             
             x = x1*cos(theta) - y1*sin(theta);
             y = x1*sin(theta) + y1*cos(theta);
+            
+            x += fieldCenterX;
+            y += fieldCenterY;
         }
     }
 }

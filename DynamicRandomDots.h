@@ -25,6 +25,9 @@ public:
                       shared_ptr<Scheduler> scheduler,
                       shared_ptr<StimulusDisplay> display,
                       shared_ptr<Variable> framesPerSecond,
+                      shared_ptr<Variable> fieldRadius,
+                      shared_ptr<Variable> fieldCenterX,
+                      shared_ptr<Variable> fieldCenterY,
                       shared_ptr<Variable> numDots,
                       shared_ptr<Variable> dotSize,
                       shared_ptr<Variable> direction,
@@ -53,15 +56,16 @@ private:
         return randVar();
     }
     
+    GLfloat fieldRadius;
+    GLfloat fieldCenterX, fieldCenterY;
+    GLint numDots;
+    GLfloat dotSize;
     shared_ptr<Variable> direction;
     shared_ptr<Variable> speed;
     
     static const GLint verticesPerDot = 2;
     std::vector<GLfloat> dots;
-    GLint numDots;
-    GLfloat dotSize;
     std::vector<GLfloat> dotSizeInPixels;
-    GLfloat fieldRadius;
 
     boost::mt19937 randGen;
     

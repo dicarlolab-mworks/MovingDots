@@ -20,6 +20,9 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
 {
     const char* TAG = "tag";
     const char* FRAMES_PER_SECOND = "frames_per_second";
+    const char* FIELD_RADIUS = "field_radius";
+    const char* FIELD_CENTER_X = "field_center_x";
+    const char* FIELD_CENTER_Y = "field_center_y";
     const char* NUM_DOTS = "num_dots";
     const char* DOT_SIZE = "dot_size";
     const char* DIRECTION = "direction";
@@ -28,6 +31,9 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
 	REQUIRE_ATTRIBUTES(parameters, 
 					   TAG,
                        FRAMES_PER_SECOND,
+                       FIELD_RADIUS,
+                       FIELD_CENTER_X,
+                       FIELD_CENTER_Y,
                        NUM_DOTS,
                        DOT_SIZE,
                        DIRECTION,
@@ -37,6 +43,15 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
     
 	shared_ptr<Variable> framesPerSecond(reg->getVariable(parameters[FRAMES_PER_SECOND]));
 	CHECK_ATTRIBUTE(framesPerSecond, parameters, FRAMES_PER_SECOND);
+    
+	shared_ptr<Variable> fieldRadius(reg->getVariable(parameters[FIELD_RADIUS]));
+	CHECK_ATTRIBUTE(fieldRadius, parameters, FIELD_RADIUS);
+    
+	shared_ptr<Variable> fieldCenterX(reg->getVariable(parameters[FIELD_CENTER_X]));
+	CHECK_ATTRIBUTE(fieldCenterX, parameters, FIELD_CENTER_X);
+    
+	shared_ptr<Variable> fieldCenterY(reg->getVariable(parameters[FIELD_CENTER_Y]));
+	CHECK_ATTRIBUTE(fieldCenterY, parameters, FIELD_CENTER_Y);
     
 	shared_ptr<Variable> numDots(reg->getVariable(parameters[NUM_DOTS]));
 	CHECK_ATTRIBUTE(numDots, parameters, NUM_DOTS);
@@ -68,6 +83,9 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
                                                                      scheduler,
                                                                      display,
                                                                      framesPerSecond,
+                                                                     fieldRadius,
+                                                                     fieldCenterX,
+                                                                     fieldCenterY,
                                                                      numDots,
                                                                      dotSize,
                                                                      direction,
