@@ -9,8 +9,6 @@
 
 #include "DynamicRandomDots.h"
 
-#include <boost/random.hpp>
-
 
 DynamicRandomDots::DynamicRandomDots(const std::string &tag,
                                      shared_ptr<Scheduler> scheduler,
@@ -105,42 +103,39 @@ void DynamicRandomDots::computeDotSizeInPixels() {
 void DynamicRandomDots::initializeDots() {
     dots.resize(numDots * verticesPerDot);
 
-    boost::mt19937 randGen;
-    boost::uniform_real<GLfloat> randDist(-fieldRadius, fieldRadius);
-    boost::variate_generator< boost::mt19937&, boost::uniform_real<GLfloat> > rand(randGen, randDist);
-    
-    for (GLint i = 0; i < (numDots * verticesPerDot); i += 2) {
+    for (GLint i = 0; i < (numDots * verticesPerDot); i += verticesPerDot) {
         GLfloat &x = dots[i];
         GLfloat &y = dots[i+1];
         do {
-            x = rand();
-            y = rand();
+            x = rand(-fieldRadius, fieldRadius);
+            y = rand(-fieldRadius, fieldRadius);
         } while (x*x + y*y > fieldRadius*fieldRadius);
     }
 }
 
 
 void DynamicRandomDots::updateDots() {
-    const GLfloat v = speed->getValue().getFloat();
-    const GLfloat theta = direction->getValue().getFloat();
-    
     const GLfloat dt = (GLfloat)(currentTime - previousTime) / 1.0e6f;
-    const GLfloat dx = v * cos(theta) * dt;
-    const GLfloat dy = v * sin(theta) * dt;
+    const GLfloat dr = dt * speed->getValue().getFloat();
+    const GLfloat theta = direction->getValue().getFloat() / 180.0f * M_PI;  // Degrees to radians
+    
+    const GLfloat dx = dr * cos(theta);
+    const GLfloat dy = dr * sin(theta);
 
-    for (GLint i = 0; i < (numDots * verticesPerDot); i += 2) {
+    for (GLint i = 0; i < (numDots * verticesPerDot); i += verticesPerDot) {
         GLfloat &x = dots[i];
         GLfloat &y = dots[i+1];
         
-        GLfloat newX = x + dx;
-        GLfloat newY = y + dy;
-        if (newX*newX + newY*newY > fieldRadius*fieldRadius) {
-            newX = -x;
-            newY = -y;
+        x += dx;
+        y += dy;
+
+        if (x*x + y*y > fieldRadius*fieldRadius) {
+            GLfloat y1 = rand(-fieldRadius, fieldRadius);
+            GLfloat x1 = -sqrt(fieldRadius*fieldRadius - y1*y1) + rand(0.0f, dr);
+            
+            x = x1*cos(theta) - y1*sin(theta);
+            y = x1*sin(theta) + y1*cos(theta);
         }
-        
-        x = newX;
-        y = newY;
     }
 }
 

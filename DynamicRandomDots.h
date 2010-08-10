@@ -10,6 +10,8 @@
 #ifndef DynamicRandomDots_H_
 #define DynamicRandomDots_H_
 
+#include <boost/random.hpp>
+
 #include <MWorksCore/DynamicStimulusDriver.h>
 #include <MWorksCore/Stimulus.h>
 
@@ -17,26 +19,6 @@ using namespace mw;
 
 
 class DynamicRandomDots : public DynamicStimulusDriver, public Stimulus {
-
-private:
-    shared_ptr<Variable> direction;
-    shared_ptr<Variable> speed;
-    
-    static const GLint verticesPerDot = 2;
-    std::vector<GLfloat> dots;
-    GLint numDots;
-    GLfloat dotSize;
-    std::vector<GLfloat> dotSizeInPixels;
-    GLfloat fieldRadius;
-    
-    MWTime previousTime, currentTime;
-    
-    DynamicRandomDots(const DynamicRandomDots &tocopy);
-
-    void validateParameters();
-    void computeDotSizeInPixels();
-    void initializeDots();
-    void updateDots();
 
 public:
     DynamicRandomDots(const std::string &tag,
@@ -55,6 +37,35 @@ public:
     
     virtual void draw(shared_ptr<StimulusDisplay> display);
     virtual Datum getCurrentAnnounceDrawData();
+    
+private:
+    DynamicRandomDots(const DynamicRandomDots &tocopy);
+    
+    void validateParameters();
+    void computeDotSizeInPixels();
+    void initializeDots();
+    void updateDots();
+    
+    template<typename RealType>
+    RealType rand(RealType min, RealType max) {
+        boost::uniform_real<RealType> randDist(min, max);
+        boost::variate_generator< boost::mt19937&, boost::uniform_real<RealType> > randVar(randGen, randDist);
+        return randVar();
+    }
+    
+    shared_ptr<Variable> direction;
+    shared_ptr<Variable> speed;
+    
+    static const GLint verticesPerDot = 2;
+    std::vector<GLfloat> dots;
+    GLint numDots;
+    GLfloat dotSize;
+    std::vector<GLfloat> dotSizeInPixels;
+    GLfloat fieldRadius;
+
+    boost::mt19937 randGen;
+    
+    MWTime previousTime, currentTime;
     
 };
 
