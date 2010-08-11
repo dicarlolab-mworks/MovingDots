@@ -11,8 +11,6 @@
 
 
 DynamicRandomDots::DynamicRandomDots(const std::string &tag,
-                                     shared_ptr<Scheduler> scheduler,
-                                     shared_ptr<StimulusDisplay> display,
                                      shared_ptr<Variable> framesPerSecond,
                                      shared_ptr<Variable> fieldRadius,
                                      shared_ptr<Variable> fieldCenterX,
@@ -21,7 +19,7 @@ DynamicRandomDots::DynamicRandomDots(const std::string &tag,
                                      shared_ptr<Variable> dotSize,
                                      shared_ptr<Variable> direction,
                                      shared_ptr<Variable> speed) :
-    StandardDynamicStimulus(tag, scheduler, display, framesPerSecond),
+    StandardDynamicStimulus(tag, framesPerSecond),
     direction(direction),
     speed(speed)
 {

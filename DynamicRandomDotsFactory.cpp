@@ -65,23 +65,7 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
 	shared_ptr<Variable> speed(reg->getVariable(parameters[SPEED]));
 	CHECK_ATTRIBUTE(speed, parameters, SPEED);
 	
-	if (!GlobalCurrentExperiment) {
-		throw SimpleException("No experiment currently defined");
-	}
-	
-	shared_ptr<StimulusDisplay> display(GlobalCurrentExperiment->getStimulusDisplay());
-	if (!display) {
-		throw SimpleException("No stimulus display in current experiment");
-	}
-	
-	shared_ptr<Scheduler> scheduler(Scheduler::instance());
-	if (!scheduler) {
-		throw SimpleException("No scheduler registered");
-	}
-	
 	shared_ptr<DynamicRandomDots> newComponent(new DynamicRandomDots(tag,
-                                                                     scheduler,
-                                                                     display,
                                                                      framesPerSecond,
                                                                      fieldRadius,
                                                                      fieldCenterX,
@@ -91,7 +75,6 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
                                                                      direction,
                                                                      speed));
     
-    newComponent->load(display);
 	shared_ptr<StimulusNode> node(new StimulusNode(newComponent));
 	reg->registerStimulusNode(tag, node);
 	
