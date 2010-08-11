@@ -12,13 +12,12 @@
 
 #include <boost/random.hpp>
 
-#include <MWorksCore/DynamicStimulusDriver.h>
-#include <MWorksCore/Stimulus.h>
+#include <MWorksCore/StandardDynamicStimulus.h>
 
 using namespace mw;
 
 
-class DynamicRandomDots : public DynamicStimulusDriver, public Stimulus {
+class DynamicRandomDots : public StandardDynamicStimulus {
 
 public:
     DynamicRandomDots(const std::string &tag,
@@ -38,7 +37,7 @@ public:
     virtual void willPlay();
     virtual void didStop();
     
-    virtual void draw(shared_ptr<StimulusDisplay> display);
+    virtual void drawFrame(shared_ptr<StimulusDisplay> display, int frameNumber);
     virtual Datum getCurrentAnnounceDrawData();
     
 private:

@@ -21,8 +21,7 @@ DynamicRandomDots::DynamicRandomDots(const std::string &tag,
                                      shared_ptr<Variable> dotSize,
                                      shared_ptr<Variable> direction,
                                      shared_ptr<Variable> speed) :
-    DynamicStimulusDriver(scheduler, display, framesPerSecond),
-    Stimulus(tag),
+    StandardDynamicStimulus(tag, scheduler, display, framesPerSecond),
     direction(direction),
     speed(speed)
 {
@@ -59,16 +58,14 @@ void DynamicRandomDots::computeDotSizeInPixels() {
     dotSizeInPixels.clear();
     
     GLdouble xMin, xMax, yMin, yMax;
+    GLint width, height;
+
     display->getDisplayBounds(xMin, xMax, yMin, yMax);
     
     for (int i = 0; i < display->getNContexts(); i++) {
         display->setCurrent(i);
-
-        GLint viewport[4];
-        glGetIntegerv(GL_VIEWPORT, viewport);
-        GLfloat width = (GLfloat)(viewport[2]);
-        
-        dotSizeInPixels.push_back(dotSize / (xMax - xMin) * width);
+        display->getCurrentViewportSize(width, height);
+        dotSizeInPixels.push_back(dotSize / (xMax - xMin) * (GLfloat)width);
     }
 }
 
@@ -124,27 +121,22 @@ void DynamicRandomDots::updateDots() {
 
 
 void DynamicRandomDots::willPlay() {
+    StandardDynamicStimulus::willPlay();
     computeDotSizeInPixels();
     previousTime = 0;
 }
 
 
 void DynamicRandomDots::didStop() {
+    StandardDynamicStimulus::didStop();
     previousTime = -1;
 }
 
 
-void DynamicRandomDots::draw(shared_ptr<StimulusDisplay> display) {
-    boost::mutex::scoped_lock locker(stim_lock);
-    
-    currentTime = getElapsedTime();
-    if (-1 == currentTime) {
-        // Not playing
-        return;
-    }
-    
+void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display, int frameNumber) {
     // If we're drawing to the main display, update dot positions
     if (display->getCurrentContextIndex() == 0) {
+        currentTime = getElapsedTime();
         updateDots();
         previousTime = currentTime;
     }
