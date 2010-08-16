@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<monkeyml version="1.0">
+    <io_devices tag="IO Devices"></io_devices>
+    <variables tag="Variables">
+        <variable tag="frames_per_second" scope="global" logging="when_changed" default_value="60" type="integer"></variable>
+        <variable tag="field_radius" scope="global" logging="when_changed" default_value="8" type="float"></variable>
+        <variable tag="field_center_x" scope="global" logging="when_changed" default_value="8.5" type="float"></variable>
+        <variable tag="field_center_y" scope="global" logging="when_changed" default_value="8.5" type="float"></variable>
+        <variable tag="num_dots" scope="global" logging="when_changed" default_value="1000" type="integer"></variable>
+        <variable tag="dot_size" scope="global" logging="when_changed" default_value="0.2" type="float"></variable>
+        <variable tag="direction" scope="global" logging="when_changed" default_value="45" type="float"></variable>
+        <variable tag="speed" scope="global" logging="when_changed" default_value="2" type="float"></variable>
+        <variable tag="stop" scope="global" logging="when_changed" default_value="0" type="boolean"></variable>
+        <variable tag="i" scope="local" logging="when_changed" default_value="0" type="integer"></variable>
+        <variable tag="j" scope="local" logging="when_changed" default_value="0" type="integer"></variable>
+    </variables>
+    <sounds tag="Sounds"></sounds>
+    <stimuli tag="Stimuli">
+        <stimulus tag="background" full_name="background" type="blank_screen" color="0.5, 0.5, 0.5"></stimulus>
+        <range_replicator tag="New Replicator" from="0" to="1" step="1" variable="i">
+            <range_replicator tag="New Replicator 2" from="0" to="1" step="1" variable="j">
+                <stimulus type="dynamic_random_dots" tag="dots${i}${j}" frames_per_second="frames_per_second" field_radius="field_radius" field_center_x="field_center_x * pow(-1, ${i})" field_center_y="field_center_y * pow(-1, ${j})" num_dots="num_dots" dot_size="dot_size" direction="direction + 270*(int)(${i}==0 &amp;&amp; ${j}==1) + 90*(int)(${i}==1 &amp;&amp; ${j}==0) + 180*(int)(${i}==1 &amp;&amp; ${j}==1)" speed="speed"></stimulus>
+            </range_replicator>
+        </range_replicator>
+    </stimuli>
+    <filters tag="Filters"></filters>
+    <optimizers tag="Optimizers"></optimizers>
+    <experiment tag="New Experiment" full_name="" description="">
+        <protocol tag="New Protocol" nsamples="1" sampling_method="cycles" selection="sequential">
+            <task_system tag="New Task System" interruptible="YES">
+                <task_system_state tag="Begin State System" interruptible="YES">
+                    <action_marker _unmoveable="1" tag="Actions"></action_marker>
+                    <action type="report" tag="Announce Begin State System" message="State system beginning"></action>
+                    <action type="assignment" tag="Assign Variable" variable="stop" value="0"></action>
+                    <action tag="Queue background" type="queue_stimulus" stimulus="background"></action>
+                    <action tag="Queue dots00" type="queue_stimulus" stimulus="dots00"></action>
+                    <action tag="Queue dots01" type="queue_stimulus" stimulus="dots01"></action>
+                    <action tag="Queue dots10" type="queue_stimulus" stimulus="dots10"></action>
+                    <action tag="Queue dots11" type="queue_stimulus" stimulus="dots11"></action>
+                    <action tag="Update display" type="update_stimulus_display"></action>
+                    <action tag="Start dots00" stimulus="dots00" type="play_dynamic_stimulus"></action>
+                    <action tag="Start dots01" stimulus="dots01" type="play_dynamic_stimulus"></action>
+                    <action tag="Start dots10" stimulus="dots10" type="play_dynamic_stimulus"></action>
+                    <action tag="Start dots11" stimulus="dots11" type="play_dynamic_stimulus"></action>
+                    <transition_marker _unmoveable="1" tag="Transitions"></transition_marker>
+                    <transition type="conditional" tag="If Condition is True, Transition to ..." condition="stop" target="Exit State System"></transition>
+                </task_system_state>
+                <task_system_state tag="Exit State System" interruptible="YES">
+                    <action_marker _unmoveable="1" tag="Actions"></action_marker>
+                    <action type="report" tag="Announce Exit State System" message="Leaving state system"></action>
+                    <action tag="Stop dots00" stimulus="dots00" type="stop_dynamic_stimulus"></action>
+                    <action tag="Stop dots01" stimulus="dots01" type="stop_dynamic_stimulus"></action>
+                    <action tag="Stop dots10" stimulus="dots10" type="stop_dynamic_stimulus"></action>
+                    <action tag="Stop dots11" stimulus="dots11" type="stop_dynamic_stimulus"></action>
+                    <transition_marker _unmoveable="1" tag="Transitions"></transition_marker>
+                    <transition tag="Return to parent task system" type="yield"></transition>
+                </task_system_state>
+            </task_system>
+        </protocol>
+    </experiment>
+</monkeyml>
