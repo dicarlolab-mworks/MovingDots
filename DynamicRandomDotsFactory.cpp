@@ -74,7 +74,8 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
                                                                      dotSize,
                                                                      direction,
                                                                      speed));
-    
+
+    newComponent->load(StimulusDisplay::getCurrentStimulusDisplay());
 	shared_ptr<StimulusNode> node(new StimulusNode(newComponent));
 	reg->registerStimulusNode(tag, node);
 	

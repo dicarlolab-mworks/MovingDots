@@ -35,6 +35,7 @@ public:
     virtual void willPlay();
     virtual void didStop();
     
+    virtual void load(shared_ptr<StimulusDisplay> display);
     virtual void drawFrame(shared_ptr<StimulusDisplay> display, int frameNumber);
     virtual Datum getCurrentAnnounceDrawData();
     
@@ -42,7 +43,7 @@ private:
     DynamicRandomDots(const DynamicRandomDots &tocopy);
     
     void validateParameters();
-    void computeDotSizeInPixels();
+    void computeDotSizeInPixels(shared_ptr<StimulusDisplay> display);
     void initializeDots();
     void updateDots();
     

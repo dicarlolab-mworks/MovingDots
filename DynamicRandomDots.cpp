@@ -28,13 +28,22 @@ DynamicRandomDots::DynamicRandomDots(const std::string &tag,
     this->fieldCenterY = fieldCenterY->getValue().getFloat();
     this->numDots = numDots->getValue().getInteger();
     this->dotSize = dotSize->getValue().getFloat();
-    
-    validateParameters();
-    initializeDots();
 }
 
 
 DynamicRandomDots::~DynamicRandomDots() { }
+
+
+void DynamicRandomDots::load(shared_ptr<StimulusDisplay> display) {
+    if (loaded)
+        return;
+
+    validateParameters();
+    computeDotSizeInPixels(display);
+    initializeDots();
+    
+    loaded = true;
+}
 
 
 void DynamicRandomDots::validateParameters() {
@@ -52,7 +61,7 @@ void DynamicRandomDots::validateParameters() {
 }
 
 
-void DynamicRandomDots::computeDotSizeInPixels() {
+void DynamicRandomDots::computeDotSizeInPixels(shared_ptr<StimulusDisplay> display) {
     dotSizeInPixels.clear();
     
     GLdouble xMin, xMax, yMin, yMax;
@@ -120,7 +129,6 @@ void DynamicRandomDots::updateDots() {
 
 void DynamicRandomDots::willPlay() {
     StandardDynamicStimulus::willPlay();
-    computeDotSizeInPixels();
     previousTime = 0;
 }
 
