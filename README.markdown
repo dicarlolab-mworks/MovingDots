@@ -6,7 +6,9 @@ How to Build
 ------------
 
 1. Download and install the [MWorks nightly
-   build](http://dicarlo-mwdev.mit.edu/mw/MWorks-NIGHTLY.dmg).
+   build](http://dicarlo-mwdev.mit.edu/mw/MWorks-NIGHTLY.dmg).  Note
+   that you need to perform a custom installation and select the
+   "Development files" component, which is not installed by default.
 
 2. Open `DynamicRandomDots.xcodeproj` in
    [Xcode](http://developer.apple.com/technologies/tools/xcode.html)
