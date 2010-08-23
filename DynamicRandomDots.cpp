@@ -169,8 +169,7 @@ void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display, int frame
 
 Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
 	boost::mutex::scoped_lock locker(stim_lock);
-	Datum announceData = DynamicStimulusDriver::getCurrentAnnounceDrawData();
-	announceData.addElement(STIM_NAME, "Dynamic Random Dots");
+	Datum announceData = StandardDynamicStimulus::getCurrentAnnounceDrawData();
 	announceData.addElement(STIM_TYPE, "dynamic_random_dots");  
 	return announceData;
 }
