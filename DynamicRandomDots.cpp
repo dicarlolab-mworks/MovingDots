@@ -17,6 +17,10 @@ DynamicRandomDots::DynamicRandomDots(const std::string &tag,
                                      shared_ptr<Variable> fieldCenterY,
                                      shared_ptr<Variable> numDots,
                                      shared_ptr<Variable> dotSize,
+                                     shared_ptr<Variable> colorR,
+                                     shared_ptr<Variable> colorG,
+                                     shared_ptr<Variable> colorB,
+                                     shared_ptr<Variable> alphaMultiplier,
                                      shared_ptr<Variable> direction,
                                      shared_ptr<Variable> speed) :
     StandardDynamicStimulus(tag, framesPerSecond),
@@ -28,6 +32,10 @@ DynamicRandomDots::DynamicRandomDots(const std::string &tag,
     this->fieldCenterY = fieldCenterY->getValue().getFloat();
     this->numDots = numDots->getValue().getInteger();
     this->dotSize = dotSize->getValue().getFloat();
+    this->colorR = colorR->getValue().getFloat();
+    this->colorG = colorG->getValue().getFloat();
+    this->colorB = colorB->getValue().getFloat();
+    this->alpha = alphaMultiplier->getValue().getFloat();
 }
 
 
@@ -153,6 +161,8 @@ void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display, int frame
     glBlendEquation(GL_FUNC_ADD);
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
+    
+    glColor4f(colorR, colorG, colorB, alpha);
 
     glEnableClientState(GL_VERTEX_ARRAY);
 
@@ -176,6 +186,10 @@ Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
 	announceData.addElement("field_center_y", fieldCenterY);  
 	announceData.addElement("num_dots", (long)numDots);  
 	announceData.addElement("dot_size", dotSize);  
+    announceData.addElement(STIM_COLOR_R, colorR);  
+    announceData.addElement(STIM_COLOR_G, colorG);  
+    announceData.addElement(STIM_COLOR_B, colorB);
+    announceData.addElement("alpha_multiplier", alpha);  
 	announceData.addElement("direction", direction->getValue().getFloat());  
 	announceData.addElement("speed", speed->getValue().getFloat());  
 	return announceData;

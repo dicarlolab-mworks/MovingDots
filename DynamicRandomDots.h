@@ -27,6 +27,10 @@ public:
                       shared_ptr<Variable> fieldCenterY,
                       shared_ptr<Variable> numDots,
                       shared_ptr<Variable> dotSize,
+                      shared_ptr<Variable> colorR,
+                      shared_ptr<Variable> colorG,
+                      shared_ptr<Variable> colorB,
+                      shared_ptr<Variable> alphaMultiplier,
                       shared_ptr<Variable> direction,
                       shared_ptr<Variable> speed);
     
@@ -58,6 +62,7 @@ private:
     GLfloat fieldCenterX, fieldCenterY;
     GLint numDots;
     GLfloat dotSize;
+    GLfloat colorR, colorG, colorB, alpha;
     shared_ptr<Variable> direction;
     shared_ptr<Variable> speed;
     

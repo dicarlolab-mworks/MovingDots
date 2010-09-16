@@ -8,6 +8,7 @@
  */
 
 #include <MWorksCore/ComponentRegistry.h>
+#include <MWorksCore/ParsedColorTrio.h>
 
 #include "DynamicRandomDotsFactory.h"
 #include "DynamicRandomDots.h"
@@ -25,6 +26,8 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
     const char* FIELD_CENTER_Y = "field_center_y";
     const char* NUM_DOTS = "num_dots";
     const char* DOT_SIZE = "dot_size";
+    const char* COLOR = "color";
+    const char* ALPHA_MULTIPLIER = "alpha_multiplier";
     const char* DIRECTION = "direction";
     const char* SPEED = "speed";
 
@@ -36,6 +39,8 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
                        FIELD_CENTER_Y,
                        NUM_DOTS,
                        DOT_SIZE,
+                       COLOR,
+                       ALPHA_MULTIPLIER,
                        DIRECTION,
                        SPEED);
 	
@@ -59,6 +64,11 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
 	shared_ptr<Variable> dotSize(reg->getVariable(parameters[DOT_SIZE]));
 	CHECK_ATTRIBUTE(dotSize, parameters, DOT_SIZE);
     
+	ParsedColorTrio pct(reg, parameters[COLOR]);
+    
+	shared_ptr<Variable> alphaMultiplier(reg->getVariable(parameters[ALPHA_MULTIPLIER]));
+	CHECK_ATTRIBUTE(alphaMultiplier, parameters, ALPHA_MULTIPLIER);
+    
 	shared_ptr<Variable> direction(reg->getVariable(parameters[DIRECTION]));
 	CHECK_ATTRIBUTE(direction, parameters, DIRECTION);
     
@@ -72,6 +82,10 @@ shared_ptr<mw::Component> DynamicRandomDotsFactory::createObject(std::map<std::s
                                                                      fieldCenterY,
                                                                      numDots,
                                                                      dotSize,
+                                                                     pct.getR(),
+                                                                     pct.getG(),
+                                                                     pct.getB(),
+                                                                     alphaMultiplier,
                                                                      direction,
                                                                      speed));
 
