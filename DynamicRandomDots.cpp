@@ -180,18 +180,19 @@ void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display, int frame
 Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
 	boost::mutex::scoped_lock locker(stim_lock);
 	Datum announceData = StandardDynamicStimulus::getCurrentAnnounceDrawData();
-	announceData.addElement(STIM_TYPE, "dynamic_random_dots");  
-	announceData.addElement("field_radius", fieldRadius);  
-	announceData.addElement("field_center_x", fieldCenterX);  
-	announceData.addElement("field_center_y", fieldCenterY);  
-	announceData.addElement("num_dots", (long)numDots);  
-	announceData.addElement("dot_size", dotSize);  
-    announceData.addElement(STIM_COLOR_R, colorR);  
-    announceData.addElement(STIM_COLOR_G, colorG);  
+	announceData.addElement(STIM_TYPE, "dynamic_random_dots");
+	announceData.addElement("field_radius", fieldRadius);
+	announceData.addElement("field_center_x", fieldCenterX);
+	announceData.addElement("field_center_y", fieldCenterY);
+	announceData.addElement("num_dots", (long)numDots);
+	announceData.addElement("dot_size", dotSize);
+    announceData.addElement(STIM_COLOR_R, colorR);
+    announceData.addElement(STIM_COLOR_G, colorG);
     announceData.addElement(STIM_COLOR_B, colorB);
-    announceData.addElement("alpha_multiplier", alpha);  
-	announceData.addElement("direction", direction->getValue().getFloat());  
-	announceData.addElement("speed", speed->getValue().getFloat());  
+    announceData.addElement("alpha_multiplier", alpha);
+	announceData.addElement("direction", direction->getValue().getFloat());
+	announceData.addElement("speed", speed->getValue().getFloat());
+
 	return announceData;
 }
 
