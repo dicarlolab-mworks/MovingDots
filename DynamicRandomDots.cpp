@@ -9,33 +9,54 @@
 
 #include "DynamicRandomDots.h"
 
+#include <MWorksCore/ParsedColorTrio.h>
 
-DynamicRandomDots::DynamicRandomDots(const std::string &tag,
-                                     shared_ptr<Variable> framesPerSecond,
-                                     shared_ptr<Variable> fieldRadius,
-                                     shared_ptr<Variable> fieldCenterX,
-                                     shared_ptr<Variable> fieldCenterY,
-                                     shared_ptr<Variable> numDots,
-                                     shared_ptr<Variable> dotSize,
-                                     shared_ptr<Variable> colorR,
-                                     shared_ptr<Variable> colorG,
-                                     shared_ptr<Variable> colorB,
-                                     shared_ptr<Variable> alphaMultiplier,
-                                     shared_ptr<Variable> direction,
-                                     shared_ptr<Variable> speed) :
-    StandardDynamicStimulus(tag, framesPerSecond),
-    direction(direction),
-    speed(speed)
+
+PARAMETER_NAME(TAG, "tag");
+PARAMETER_NAME(FRAMES_PER_SECOND, "frames_per_second");
+PARAMETER_NAME(FIELD_RADIUS, "field_radius");
+PARAMETER_NAME(FIELD_CENTER_X, "field_center_x");
+PARAMETER_NAME(FIELD_CENTER_Y, "field_center_y");
+PARAMETER_NAME(NUM_DOTS, "num_dots");
+PARAMETER_NAME(DOT_SIZE, "dot_size");
+PARAMETER_NAME(COLOR, "color");
+PARAMETER_NAME(ALPHA_MULTIPLIER, "alpha_multiplier");
+PARAMETER_NAME(DIRECTION, "direction");
+PARAMETER_NAME(SPEED, "speed");
+
+
+void DynamicRandomDots::describeParameters(ParameterManifest &manifest) {
+    manifest.addParameter(TAG, "Dynamic Random Dots", false);
+    manifest.addParameter(FRAMES_PER_SECOND, "60");
+    manifest.addParameter(FIELD_RADIUS);
+    manifest.addParameter(FIELD_CENTER_X);
+    manifest.addParameter(FIELD_CENTER_Y);
+    manifest.addParameter(NUM_DOTS);
+    manifest.addParameter(DOT_SIZE);
+    manifest.addParameter(COLOR, "1.0,1.0,1.0", false);
+    manifest.addParameter(ALPHA_MULTIPLIER, "1.0");
+    manifest.addParameter(DIRECTION);
+    manifest.addParameter(SPEED);
+}
+
+
+DynamicRandomDots::DynamicRandomDots(StdStringMap &parameters, MWVariableMap &variables, mw::ComponentRegistry *reg) :
+    StandardDynamicStimulus(parameters[TAG], variables[FRAMES_PER_SECOND]),
+    direction(variables[DIRECTION]),
+    speed(variables[SPEED])
 {
-    this->fieldRadius = fieldRadius->getValue().getFloat();
-    this->fieldCenterX = fieldCenterX->getValue().getFloat();
-    this->fieldCenterY = fieldCenterY->getValue().getFloat();
-    this->numDots = numDots->getValue().getInteger();
-    this->dotSize = dotSize->getValue().getFloat();
-    this->colorR = colorR->getValue().getFloat();
-    this->colorG = colorG->getValue().getFloat();
-    this->colorB = colorB->getValue().getFloat();
-    this->alpha = alphaMultiplier->getValue().getFloat();
+    fieldRadius = variables[FIELD_RADIUS]->getValue().getFloat();
+    fieldCenterX = variables[FIELD_CENTER_X]->getValue().getFloat();
+    fieldCenterY = variables[FIELD_CENTER_Y]->getValue().getFloat();
+    numDots = variables[NUM_DOTS]->getValue().getInteger();
+    dotSize = variables[DOT_SIZE]->getValue().getFloat();
+
+    ParsedColorTrio pct(reg, parameters[COLOR]);
+    colorR = pct.getR()->getValue().getFloat();
+    colorG = pct.getG()->getValue().getFloat();
+    colorB = pct.getB()->getValue().getFloat();
+
+    alpha = variables[ALPHA_MULTIPLIER]->getValue().getFloat();
 }
 
 

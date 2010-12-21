@@ -14,26 +14,17 @@
 
 #include <MWorksCore/StandardDynamicStimulus.h>
 
+#include "SelfDescribingComponent.h"
+
 using namespace mw;
 
 
-class DynamicRandomDots : public StandardDynamicStimulus {
+class DynamicRandomDots : public StandardDynamicStimulus, public SelfDescribingComponent {
 
 public:
-    DynamicRandomDots(const std::string &tag,
-                      shared_ptr<Variable> framesPerSecond,
-                      shared_ptr<Variable> fieldRadius,
-                      shared_ptr<Variable> fieldCenterX,
-                      shared_ptr<Variable> fieldCenterY,
-                      shared_ptr<Variable> numDots,
-                      shared_ptr<Variable> dotSize,
-                      shared_ptr<Variable> colorR,
-                      shared_ptr<Variable> colorG,
-                      shared_ptr<Variable> colorB,
-                      shared_ptr<Variable> alphaMultiplier,
-                      shared_ptr<Variable> direction,
-                      shared_ptr<Variable> speed);
-    
+    static void describeParameters(ParameterManifest &manifest);
+
+    DynamicRandomDots(StdStringMap &parameters, MWVariableMap &variables, mw::ComponentRegistry *reg);
     virtual ~DynamicRandomDots();
     
     virtual void willPlay();

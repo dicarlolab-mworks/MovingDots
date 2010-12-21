@@ -10,7 +10,7 @@
 #include <MWorksCore/ComponentFactory.h>
 
 #include "DynamicRandomDotsPlugin.h"
-#include "DynamicRandomDotsFactory.h"
+#include "DynamicRandomDots.h"
 
 using namespace mw;
 
@@ -22,5 +22,5 @@ Plugin* getPlugin() {
 
 void DynamicRandomDotsPlugin::registerComponents(shared_ptr<ComponentRegistry> registry) {
     registry->registerFactory(std::string("stimulus/dynamic_random_dots"),
-							  (ComponentFactory *)(new DynamicRandomDotsFactory()));
+							  (ComponentFactory *)(new SelfDescribingComponentFactory<DynamicRandomDots>()));
 }
