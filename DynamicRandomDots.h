@@ -19,7 +19,7 @@
 using namespace mw;
 
 
-class DynamicRandomDots : public StandardDynamicStimulus, public SelfDescribingComponent {
+class DynamicRandomDots : public StandardDynamicStimulus {
 
 public:
     static void describeParameters(ParameterManifest &manifest);

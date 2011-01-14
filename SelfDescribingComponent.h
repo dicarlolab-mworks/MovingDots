@@ -99,22 +99,16 @@ private:
 };
 
 
-class SelfDescribingComponent {
-    
-public:
+template<typename ComponentType>
+class SelfDescribingComponentFactory : public mw::ComponentFactory {
+
     //
-    // Subclasses must implement these:
+    // ComponentType must implement the following methods:
     //
     // static void describeParameters(ParameterManifest &manifest);
     // ComponentType(StdStringMap &parameters, MWVariableMap &variables, mw::ComponentRegistry *reg);
     //
-
-};
-
-
-template<typename ComponentType>
-class SelfDescribingComponentFactory : public mw::ComponentFactory {
-
+    
 public:
     virtual const ParameterManifest& getParameterManifest() {
         static ParameterManifest manifest;
@@ -161,16 +155,27 @@ public:
                 variables[name] = var;
             }
         }
-        
-        boost::shared_ptr<ComponentType> newComponent(new ComponentType(parameters, variables, reg));
+
+        return boost::shared_ptr<ComponentType>(new ComponentType(parameters, variables, reg));
+    }
+
+};
+
+
+template<typename StimulusType>
+class SelfDescribingStimulusFactory : public SelfDescribingComponentFactory<StimulusType> {
+    
+public:
+    virtual boost::shared_ptr<mw::Component> createObject(StdStringMap parameters, mw::ComponentRegistry *reg) {
+        boost::shared_ptr<StimulusType> newComponent(boost::dynamic_pointer_cast<StimulusType>(SelfDescribingComponentFactory<StimulusType>::createObject(parameters, reg)));
         
         newComponent->load(mw::StimulusDisplay::getCurrentStimulusDisplay());
         boost::shared_ptr<mw::StimulusNode> node(new mw::StimulusNode(newComponent));
         reg->registerStimulusNode(parameters["tag"], node);
-
+        
         return newComponent;
     }
-
+    
 };
 
 
