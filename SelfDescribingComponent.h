@@ -13,8 +13,6 @@
 #include <MWorksCore/ComponentFactory.h>
 #include <MWorksCore/ComponentRegistry.h>
 
-#define PARAMETER_NAME(name, value)  static const std::string name(value)
-
 
 class UnknownAttributeException : public mw::ComponentFactoryException {
 
@@ -106,8 +104,16 @@ private:
 };
 
 
+class BaseComponentFactory : public mw::ComponentFactory {
+    
+public:
+    virtual const ParameterManifest& getParameterManifest() = 0;
+    
+};
+
+
 template<typename ComponentType>
-class SelfDescribingComponentFactory : public mw::ComponentFactory {
+class SelfDescribingComponentFactory : public BaseComponentFactory {
 
     //
     // ComponentType must implement the following methods:

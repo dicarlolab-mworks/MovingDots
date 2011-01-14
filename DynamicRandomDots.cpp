@@ -11,6 +11,8 @@
 
 #include <MWorksCore/ParsedColorTrio.h>
 
+#define PARAMETER_NAME(name, value)  static const std::string name(value)
+
 
 PARAMETER_NAME(TAG, "tag");
 PARAMETER_NAME(FRAMES_PER_SECOND, "frames_per_second");
