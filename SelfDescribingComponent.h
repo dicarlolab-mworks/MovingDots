@@ -34,28 +34,35 @@ public:
 };
 
 
+enum ParameterType {
+    PARAM_TYPE_STRING,
+    PARAM_TYPE_VARIABLE
+};
+
+
 class ParameterInfo {
     
 public:
-    explicit ParameterInfo(bool required = true, bool getVariable = true) :
+    
+    explicit ParameterInfo(bool required = true, ParameterType paramType = PARAM_TYPE_VARIABLE) :
         required(required),
-        getVariable(getVariable)
+        paramType(paramType)
     { }
 
-    explicit ParameterInfo(const std::string &defaultValue, bool getVariable = true) :
+    explicit ParameterInfo(const std::string &defaultValue, ParameterType paramType = PARAM_TYPE_VARIABLE) :
         required(true),
         defaultValue(defaultValue),
-        getVariable(getVariable)
+        paramType(paramType)
     { }
     
     bool isRequired() const { return required; }
     const std::string& getDefaultValue() const { return defaultValue; }
-    bool shouldGetVariable() const { return getVariable; }
+    ParameterType getParamType() const { return paramType; }
     
 private:
     bool required;
     std::string defaultValue;
-    bool getVariable;
+    ParameterType paramType;
     
 };
 
@@ -69,12 +76,12 @@ typedef std::map< std::string, boost::shared_ptr<mw::Variable> > MWVariableMap;
 class ParameterManifest {
     
 public:
-    void addParameter(const std::string &name, const std::string &defaultValue, bool getVariable = true) {
-        addParameter(name, ParameterInfo(defaultValue, getVariable));
+    void addParameter(const std::string &name, const std::string &defaultValue, ParameterType paramType = PARAM_TYPE_VARIABLE) {
+        addParameter(name, ParameterInfo(defaultValue, paramType));
     }
     
-    void addParameter(const std::string &name, bool required = true, bool getVariable = true) {
-        addParameter(name, ParameterInfo(required, getVariable));
+    void addParameter(const std::string &name, bool required = true, ParameterType paramType = PARAM_TYPE_VARIABLE) {
+        addParameter(name, ParameterInfo(required, paramType));
     }
     
     void addParameter(const std::string &name, const ParameterInfo &info) {
@@ -115,11 +122,11 @@ public:
         static bool initialized = false;
         
         if (!initialized) {
-            manifest.addParameter("reference_id", false, false);
-            manifest.addParameter("type", false, false);
-            manifest.addParameter("variable_assignment", false, false);
-            manifest.addParameter("working_path", false, false);
-            manifest.addParameter("xml_document_path", false, false);
+            manifest.addParameter("reference_id", false, PARAM_TYPE_STRING);
+            manifest.addParameter("type", false, PARAM_TYPE_STRING);
+            manifest.addParameter("variable_assignment", false, PARAM_TYPE_STRING);
+            manifest.addParameter("working_path", false, PARAM_TYPE_STRING);
+            manifest.addParameter("xml_document_path", false, PARAM_TYPE_STRING);
             ComponentType::describeParameters(manifest);
             initialized = true;
         }
@@ -149,7 +156,7 @@ public:
             const std::string &value = (*param).second;
             const ParameterInfo &info = (*iter).second;
             
-            if (info.shouldGetVariable()) {
+            if (info.getParamType() == PARAM_TYPE_VARIABLE) {
                 boost::shared_ptr<mw::Variable> var(reg->getVariable(value));
                 checkAttribute(var, parameters["reference_id"], name, value);
                 variables[name] = var;
