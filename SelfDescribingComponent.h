@@ -107,7 +107,21 @@ private:
 class BaseComponentFactory : public mw::ComponentFactory {
     
 public:
-    virtual const ParameterManifest& getParameterManifest() = 0;
+    BaseComponentFactory() {
+        // Register parameters added/used solely by the parser
+        manifest.addParameter("reference_id", false, PARAM_TYPE_STRING);
+        manifest.addParameter("type", false, PARAM_TYPE_STRING);
+        manifest.addParameter("variable_assignment", false, PARAM_TYPE_STRING);
+        manifest.addParameter("working_path", false, PARAM_TYPE_STRING);
+        manifest.addParameter("xml_document_path", false, PARAM_TYPE_STRING);
+    }
+
+    const ParameterManifest& getParameterManifest() const {
+        return manifest;
+    }
+    
+protected:
+    ParameterManifest manifest;
     
 };
 
@@ -123,25 +137,11 @@ class SelfDescribingComponentFactory : public BaseComponentFactory {
     //
     
 public:
-    virtual const ParameterManifest& getParameterManifest() {
-        static ParameterManifest manifest;
-        static bool initialized = false;
-        
-        if (!initialized) {
-            manifest.addParameter("reference_id", false, PARAM_TYPE_STRING);
-            manifest.addParameter("type", false, PARAM_TYPE_STRING);
-            manifest.addParameter("variable_assignment", false, PARAM_TYPE_STRING);
-            manifest.addParameter("working_path", false, PARAM_TYPE_STRING);
-            manifest.addParameter("xml_document_path", false, PARAM_TYPE_STRING);
-            ComponentType::describeParameters(manifest);
-            initialized = true;
-        }
-        
-        return manifest;
+    SelfDescribingComponentFactory() {
+        ComponentType::describeParameters(manifest);
     }
     
     virtual boost::shared_ptr<mw::Component> createObject(StdStringMap parameters, mw::ComponentRegistry *reg) {
-        const ParameterManifest &manifest = getParameterManifest();
         requireAttributes(parameters, manifest.getRequiredParameters());
 
         const ParameterInfoMap &infoMap = manifest.getParameters();
