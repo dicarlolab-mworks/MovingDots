@@ -66,7 +66,7 @@ class SelfDescribingComponentFactory : public BaseComponentFactory {
     // ComponentType must implement the following methods:
     //
     // static void describeParameters(ParameterManifest &manifest);
-    // ComponentType(ParameterValueMap &parameters);
+    // ComponentType(const ParameterValueMap &parameters);
     //
     
 public:

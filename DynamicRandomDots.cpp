@@ -43,8 +43,15 @@ void DynamicRandomDots::describeParameters(ParameterManifest &manifest) {
 
 
 template<>
-ParsedColorTrio ParameterValue::convert(const std::string &s, mw::ComponentRegistry *reg) {
-    return ParsedColorTrio(reg, s);
+ColorTrio ParameterValue::convert(const std::string &s, mw::ComponentRegistry *reg) {
+    ColorTrio ct;
+
+    ParsedColorTrio pct = ParsedColorTrio(reg, s);
+    ct.red = pct.getR()->getValue().getFloat();
+    ct.green = pct.getG()->getValue().getFloat();
+    ct.blue = pct.getB()->getValue().getFloat();
+
+    return ct;
 }
 
 
@@ -55,15 +62,11 @@ DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
     fieldCenterY(parameters[FIELD_CENTER_Y]),
     numDots(parameters[NUM_DOTS]),
     dotSize(parameters[DOT_SIZE]),
+    color(parameters[COLOR]),
     alpha(parameters[ALPHA_MULTIPLIER]),
     direction(parameters[DIRECTION]),
     speed(parameters[SPEED])
-{
-    ParsedColorTrio pct = parameters[COLOR];
-    colorR = pct.getR()->getValue().getFloat();
-    colorG = pct.getG()->getValue().getFloat();
-    colorB = pct.getB()->getValue().getFloat();
-}
+{ }
 
 
 DynamicRandomDots::~DynamicRandomDots() { }
@@ -189,7 +192,7 @@ void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display, int frame
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
     
-    glColor4f(colorR, colorG, colorB, alpha);
+    glColor4f(color.red, color.green, color.blue, alpha);
 
     glEnableClientState(GL_VERTEX_ARRAY);
 
@@ -213,9 +216,9 @@ Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
 	announceData.addElement("field_center_y", fieldCenterY);
 	announceData.addElement("num_dots", (long)numDots);
 	announceData.addElement("dot_size", dotSize);
-    announceData.addElement(STIM_COLOR_R, colorR);
-    announceData.addElement(STIM_COLOR_G, colorG);
-    announceData.addElement(STIM_COLOR_B, colorB);
+    announceData.addElement(STIM_COLOR_R, color.red);
+    announceData.addElement(STIM_COLOR_G, color.green);
+    announceData.addElement(STIM_COLOR_B, color.blue);
     announceData.addElement("alpha_multiplier", alpha);
 	announceData.addElement("direction", direction->getValue().getFloat());
 	announceData.addElement("speed", speed->getValue().getFloat());
