@@ -24,6 +24,10 @@ typedef std::map<std::string, ParameterInfo> ParameterInfoMap;
 class ComponentInfo {
     
 public:
+    void setSignature(const std::string &newSignature) {
+        signature = newSignature;
+    }
+    
     void addParameter(const std::string &name, const std::string &defaultValue) {
         addParameter(name, ParameterInfo(defaultValue));
     }
@@ -39,6 +43,10 @@ public:
         }
     }
     
+    const std::string& getSignature() const {
+        return signature;
+    }
+    
     const ParameterInfoMap& getParameters() const {
         return parameters;
     }
@@ -48,6 +56,7 @@ public:
     }
     
 private:
+    std::string signature;
     ParameterInfoMap parameters;
     StdStringVector requiredParameters;
     

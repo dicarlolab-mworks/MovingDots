@@ -28,6 +28,8 @@ PARAMETER_NAME(SPEED, "speed");
 
 
 void DynamicRandomDots::describe(ComponentInfo &info) {
+    info.setSignature("stimulus/dynamic_random_dots");
+
     info.addParameter(TAG, "Dynamic Random Dots");
     info.addParameter(FRAMES_PER_SECOND, "60");
     info.addParameter(FIELD_RADIUS);

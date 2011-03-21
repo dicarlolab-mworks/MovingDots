@@ -27,10 +27,6 @@ struct ColorTrio {
 class DynamicRandomDots : public StandardDynamicStimulus {
 
 public:
-    static std::string getSignature() {
-        return "stimulus/dynamic_random_dots";
-    }
-
     static void describe(ComponentInfo &info);
 
     DynamicRandomDots(const ParameterValueMap &parameters);

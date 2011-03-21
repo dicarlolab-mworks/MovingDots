@@ -55,7 +55,7 @@ Type ParameterValue::convert(const std::string &s, mw::ComponentRegistry *reg) {
     try {
         val = boost::lexical_cast<Type>(s);
     } catch (boost::bad_lexical_cast &e) {
-        val = Type(ParameterValue::convert<VariablePtr>(s, reg)->getValue());
+        val = Type(convert<VariablePtr>(s, reg)->getValue());
     }
     
     return val;
@@ -72,15 +72,13 @@ VariablePtr ParameterValue::convert(const std::string &s, mw::ComponentRegistry 
 
 class ParameterValueMap {
     
-    typedef std::map<std::string, ParameterValue> _ParameterValueMap;
-    
 public:
     void addValue(const std::string &name, const ParameterValue &value) {
         values.insert(std::make_pair(name, value));
     }
     
     const ParameterValue& operator [](const std::string &name) const {
-        _ParameterValueMap::const_iterator iter = values.find(name);
+        std::map<std::string, ParameterValue>::const_iterator iter = values.find(name);
         if (iter == values.end()) {
             // FIXME: this is an internal, programmer error and should be flagged as such
             throw mw::SimpleException("unknown parameter", name);
@@ -89,7 +87,7 @@ public:
     }
     
 private:
-    _ParameterValueMap values;
+    std::map<std::string, ParameterValue> values;
     
 };
 
