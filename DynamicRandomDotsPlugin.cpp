@@ -21,6 +21,5 @@ Plugin* getPlugin() {
 
 
 void DynamicRandomDotsPlugin::registerComponents(shared_ptr<ComponentRegistry> registry) {
-    registry->registerFactory(std::string("stimulus/dynamic_random_dots"),
-							  (ComponentFactory *)(new SelfDescribingStimulusFactory<DynamicRandomDots>()));
+    BaseComponentFactory::registerFactory<SelfDescribingStimulusFactory, DynamicRandomDots>(registry);
 }

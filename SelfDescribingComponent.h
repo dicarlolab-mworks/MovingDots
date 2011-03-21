@@ -37,6 +37,12 @@ public:
 class BaseComponentFactory : public mw::ComponentFactory {
     
 public:
+    template< template<typename> class FactoryTemplate, typename ComponentType >
+    static void registerFactory(boost::shared_ptr<mw::ComponentRegistry> registry) {
+        registry->registerFactory(ComponentType::getSignature(),
+                                  (mw::ComponentFactory *)(new FactoryTemplate<ComponentType>()));
+    }
+    
     const ParameterManifest& getParameterManifest() const {
         return manifest;
     }
@@ -65,6 +71,7 @@ class SelfDescribingComponentFactory : public BaseComponentFactory {
     //
     // ComponentType must implement the following methods:
     //
+    // static std::string getSignature();
     // static void describeParameters(ParameterManifest &manifest);
     // ComponentType(const ParameterValueMap &parameters);
     //
