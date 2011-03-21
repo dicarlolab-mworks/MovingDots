@@ -24,7 +24,7 @@ class DynamicRandomDots : public StandardDynamicStimulus {
 public:
     static void describeParameters(ParameterManifest &manifest);
 
-    DynamicRandomDots(StdStringMap &parameters, MWVariableMap &variables, mw::ComponentRegistry *reg);
+    DynamicRandomDots(const ParameterValueMap &parameters);
     virtual ~DynamicRandomDots();
     
     virtual void willPlay();

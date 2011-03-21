@@ -28,37 +28,41 @@ PARAMETER_NAME(SPEED, "speed");
 
 
 void DynamicRandomDots::describeParameters(ParameterManifest &manifest) {
-    manifest.addParameter(TAG, "Dynamic Random Dots", PARAM_TYPE_STRING);
+    manifest.addParameter(TAG, "Dynamic Random Dots");
     manifest.addParameter(FRAMES_PER_SECOND, "60");
     manifest.addParameter(FIELD_RADIUS);
     manifest.addParameter(FIELD_CENTER_X);
     manifest.addParameter(FIELD_CENTER_Y);
     manifest.addParameter(NUM_DOTS);
     manifest.addParameter(DOT_SIZE);
-    manifest.addParameter(COLOR, "1.0,1.0,1.0", PARAM_TYPE_STRING);
+    manifest.addParameter(COLOR, "1.0,1.0,1.0");
     manifest.addParameter(ALPHA_MULTIPLIER, "1.0");
     manifest.addParameter(DIRECTION);
     manifest.addParameter(SPEED);
 }
 
 
-DynamicRandomDots::DynamicRandomDots(StdStringMap &parameters, MWVariableMap &variables, mw::ComponentRegistry *reg) :
-    StandardDynamicStimulus(parameters[TAG], variables[FRAMES_PER_SECOND]),
-    direction(variables[DIRECTION]),
-    speed(variables[SPEED])
-{
-    fieldRadius = variables[FIELD_RADIUS]->getValue().getFloat();
-    fieldCenterX = variables[FIELD_CENTER_X]->getValue().getFloat();
-    fieldCenterY = variables[FIELD_CENTER_Y]->getValue().getFloat();
-    numDots = variables[NUM_DOTS]->getValue().getInteger();
-    dotSize = variables[DOT_SIZE]->getValue().getFloat();
+template<>
+ParsedColorTrio ParameterValue::convert(const std::string &s, mw::ComponentRegistry *reg) {
+    return ParsedColorTrio(reg, s);
+}
 
-    ParsedColorTrio pct(reg, parameters[COLOR]);
+
+DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
+    StandardDynamicStimulus(parameters[TAG], parameters[FRAMES_PER_SECOND]),
+    fieldRadius(parameters[FIELD_RADIUS]),
+    fieldCenterX(parameters[FIELD_CENTER_X]),
+    fieldCenterY(parameters[FIELD_CENTER_Y]),
+    numDots(parameters[NUM_DOTS]),
+    dotSize(parameters[DOT_SIZE]),
+    alpha(parameters[ALPHA_MULTIPLIER]),
+    direction(parameters[DIRECTION]),
+    speed(parameters[SPEED])
+{
+    ParsedColorTrio pct = parameters[COLOR];
     colorR = pct.getR()->getValue().getFloat();
     colorG = pct.getG()->getValue().getFloat();
     colorB = pct.getB()->getValue().getFloat();
-
-    alpha = variables[ALPHA_MULTIPLIER]->getValue().getFloat();
 }
 
 
