@@ -8,15 +8,3 @@
  */
 
 #include "SelfDescribingComponent.h"
-
-
-template<>
-const std::string& ParameterValue::convert(const std::string &s, mw::ComponentRegistry *reg) {
-    return s;
-}
-
-
-template<>
-VariablePtr ParameterValue::convert(const std::string &s, mw::ComponentRegistry *reg) {
-    return reg->getVariable(s);
-}

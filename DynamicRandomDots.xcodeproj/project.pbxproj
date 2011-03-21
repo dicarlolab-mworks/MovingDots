@@ -39,6 +39,7 @@
 		BFBFB0D610446C180019216B /* MWorksCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBFB0D510446C180019216B /* MWorksCore.framework */; };
 		E12642D01333F01000507C22 /* SelfDescribingComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E12642CF1333F01000507C22 /* SelfDescribingComponent.cpp */; };
 		E12A26FD1201E31400CE8C55 /* DynamicRandomDots.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D5B49B6048680CD000E48DA /* DynamicRandomDots.bundle */; };
+		E16920A913379F7A00838C74 /* ParameterValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E16920A813379F7A00838C74 /* ParameterValue.cpp */; };
 		E1FCD4CF11DAB1AE0037E6FA /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1FCD4CE11DAB1AE0037E6FA /* OpenGL.framework */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +86,10 @@
 		8D5B49B7048680CD000E48DA /* DynamicRandomDots-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DynamicRandomDots-Info.plist"; sourceTree = "<group>"; };
 		BFBFB0D510446C180019216B /* MWorksCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MWorksCore.framework; path = /Library/Frameworks/MWorksCore.framework; sourceTree = "<absolute>"; };
 		E12642CF1333F01000507C22 /* SelfDescribingComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelfDescribingComponent.cpp; sourceTree = "<group>"; };
+		E16920A113379F5000838C74 /* ParameterInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParameterInfo.h; path = Parameters/ParameterInfo.h; sourceTree = "<group>"; };
+		E16920A413379F6200838C74 /* ParameterManifest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParameterManifest.h; path = Parameters/ParameterManifest.h; sourceTree = "<group>"; };
+		E16920A713379F7A00838C74 /* ParameterValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParameterValue.h; path = Parameters/ParameterValue.h; sourceTree = "<group>"; };
+		E16920A813379F7A00838C74 /* ParameterValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParameterValue.cpp; path = Parameters/ParameterValue.cpp; sourceTree = "<group>"; };
 		E177043212B6AEE600D4DF6D /* SelfDescribingComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelfDescribingComponent.h; sourceTree = "<group>"; };
 		E1FCD4CE11DAB1AE0037E6FA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -136,6 +141,7 @@
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				E169209A13379EC900838C74 /* Parameters */,
 				E177043212B6AEE600D4DF6D /* SelfDescribingComponent.h */,
 				E12642CF1333F01000507C22 /* SelfDescribingComponent.cpp */,
 				5CFE59180F571B15000C7F30 /* DynamicRandomDots.h */,
@@ -193,6 +199,17 @@
 				5CFCAB091105FB4C007CE55F /* MWLibrary.xml */,
 			);
 			name = "Editor Definitions";
+			sourceTree = "<group>";
+		};
+		E169209A13379EC900838C74 /* Parameters */ = {
+			isa = PBXGroup;
+			children = (
+				E16920A113379F5000838C74 /* ParameterInfo.h */,
+				E16920A413379F6200838C74 /* ParameterManifest.h */,
+				E16920A713379F7A00838C74 /* ParameterValue.h */,
+				E16920A813379F7A00838C74 /* ParameterValue.cpp */,
+			);
+			name = Parameters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -261,6 +278,7 @@
 				5CFE591A0F571B15000C7F30 /* DynamicRandomDots.cpp in Sources */,
 				5CF9AEBC0FD5795C00F405F6 /* DynamicRandomDotsPlugin.cpp in Sources */,
 				E12642D01333F01000507C22 /* SelfDescribingComponent.cpp in Sources */,
+				E16920A913379F7A00838C74 /* ParameterValue.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
