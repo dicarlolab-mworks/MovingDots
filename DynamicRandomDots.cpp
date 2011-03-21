@@ -27,18 +27,18 @@ PARAMETER_NAME(DIRECTION, "direction");
 PARAMETER_NAME(SPEED, "speed");
 
 
-void DynamicRandomDots::describeParameters(ParameterManifest &manifest) {
-    manifest.addParameter(TAG, "Dynamic Random Dots");
-    manifest.addParameter(FRAMES_PER_SECOND, "60");
-    manifest.addParameter(FIELD_RADIUS);
-    manifest.addParameter(FIELD_CENTER_X);
-    manifest.addParameter(FIELD_CENTER_Y);
-    manifest.addParameter(NUM_DOTS);
-    manifest.addParameter(DOT_SIZE);
-    manifest.addParameter(COLOR, "1.0,1.0,1.0");
-    manifest.addParameter(ALPHA_MULTIPLIER, "1.0");
-    manifest.addParameter(DIRECTION);
-    manifest.addParameter(SPEED);
+void DynamicRandomDots::describe(ComponentInfo &info) {
+    info.addParameter(TAG, "Dynamic Random Dots");
+    info.addParameter(FRAMES_PER_SECOND, "60");
+    info.addParameter(FIELD_RADIUS);
+    info.addParameter(FIELD_CENTER_X);
+    info.addParameter(FIELD_CENTER_Y);
+    info.addParameter(NUM_DOTS);
+    info.addParameter(DOT_SIZE);
+    info.addParameter(COLOR, "1.0,1.0,1.0");
+    info.addParameter(ALPHA_MULTIPLIER, "1.0");
+    info.addParameter(DIRECTION);
+    info.addParameter(SPEED);
 }
 
 

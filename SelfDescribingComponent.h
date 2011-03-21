@@ -12,7 +12,7 @@
 
 #include <MWorksCore/ComponentFactory.h>
 
-#include "ParameterManifest.h"
+#include "ComponentInfo.h"
 #include "ParameterValue.h"
 
 
@@ -43,8 +43,8 @@ public:
                                   (mw::ComponentFactory *)(new FactoryTemplate<ComponentType>()));
     }
     
-    const ParameterManifest& getParameterManifest() const {
-        return manifest;
+    const ComponentInfo& getComponentInfo() const {
+        return info;
     }
     
     virtual bool isInternalParameter(const std::string &name) const {
@@ -57,7 +57,7 @@ public:
     }
 
 protected:
-    ParameterManifest manifest;
+    ComponentInfo info;
     
 };
 
@@ -72,19 +72,19 @@ class SelfDescribingComponentFactory : public BaseComponentFactory {
     // ComponentType must implement the following methods:
     //
     // static std::string getSignature();
-    // static void describeParameters(ParameterManifest &manifest);
+    // static void describe(ComponentInfo &info);
     // ComponentType(const ParameterValueMap &parameters);
     //
     
 public:
     SelfDescribingComponentFactory() {
-        ComponentType::describeParameters(manifest);
+        ComponentType::describe(info);
     }
     
     virtual boost::shared_ptr<mw::Component> createObject(StdStringMap parameters, mw::ComponentRegistry *reg) {
-        requireAttributes(parameters, manifest.getRequiredParameters());
+        requireAttributes(parameters, info.getRequiredParameters());
 
-        const ParameterInfoMap &infoMap = manifest.getParameters();
+        const ParameterInfoMap &infoMap = info.getParameters();
         ParameterValueMap values;
 
         for (StdStringMap::iterator param = parameters.begin(); param != parameters.end(); param++) {

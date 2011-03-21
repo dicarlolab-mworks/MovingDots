@@ -31,7 +31,7 @@ public:
         return "stimulus/dynamic_random_dots";
     }
 
-    static void describeParameters(ParameterManifest &manifest);
+    static void describe(ComponentInfo &info);
 
     DynamicRandomDots(const ParameterValueMap &parameters);
     virtual ~DynamicRandomDots();

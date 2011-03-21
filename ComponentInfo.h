@@ -1,5 +1,5 @@
 /*
- *  ParameterManifest.h
+ *  ComponentInfo.h
  *  DynamicRandomDots
  *
  *  Created by Christopher Stawarz on 3/21/11.
@@ -7,8 +7,8 @@
  *
  */
 
-#ifndef ParameterManifest_H_
-#define ParameterManifest_H_
+#ifndef ComponentInfo_H_
+#define ComponentInfo_H_
 
 #include <map>
 #include <string>
@@ -21,7 +21,7 @@ typedef std::vector<std::string> StdStringVector;
 typedef std::map<std::string, ParameterInfo> ParameterInfoMap;
 
 
-class ParameterManifest {
+class ComponentInfo {
     
 public:
     void addParameter(const std::string &name, const std::string &defaultValue) {
