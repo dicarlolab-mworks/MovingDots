@@ -46,6 +46,35 @@ public:
         registry->registerFactory(factory->getComponentInfo().getSignature(), (mw::ComponentFactory *)factory);
     }
     
+    const ComponentInfo& getComponentInfo() const {
+        return info;
+    }
+
+protected:
+    void processParameters(StringMap &parameters, mw::ComponentRegistry *reg, ParameterValueMap &values) {
+        requireAttributes(parameters, info.getRequiredParameters());
+        
+        const ParameterInfoMap &infoMap = info.getParameters();
+        
+        for (StringMap::iterator param = parameters.begin(); param != parameters.end(); param++) {
+            const std::string &name = (*param).first;
+            ParameterInfoMap::const_iterator iter = infoMap.find(name);
+            
+            if ((iter == infoMap.end()) && !isInternalParameter(name)) {
+                std::string referenceID("<unknown object>");
+                if (parameters.find("reference_id") != parameters.end()) {
+                    referenceID = parameters["reference_id"];
+                }
+                throw UnknownAttributeException(referenceID, name);
+            }
+            
+            const std::string &value = (*param).second;
+            const ParameterInfo &info = (*iter).second;
+            
+            values.insert(std::make_pair(name, ParameterValue(value, reg)));
+        }
+    }
+    
     static bool isInternalParameter(const std::string &name) {
         // Identify parameters added by the parser
         return ((name == "reference_id") ||
@@ -55,11 +84,6 @@ public:
                 (name == "xml_document_path"));
     }
     
-    const ComponentInfo& getComponentInfo() const {
-        return info;
-    }
-
-protected:
     ComponentInfo info;
     
 };
@@ -90,28 +114,7 @@ protected:
                                                           mw::ComponentRegistry *reg,
                                                           ParameterValueMap &values)
     {
-        requireAttributes(parameters, info.getRequiredParameters());
-        
-        const ParameterInfoMap &infoMap = info.getParameters();
-        
-        for (StringMap::iterator param = parameters.begin(); param != parameters.end(); param++) {
-            const std::string &name = (*param).first;
-            ParameterInfoMap::const_iterator iter = infoMap.find(name);
-            
-            if ((iter == infoMap.end()) && !isInternalParameter(name)) {
-                std::string referenceID("<unknown object>");
-                if (parameters.find("reference_id") != parameters.end()) {
-                    referenceID = parameters["reference_id"];
-                }
-                throw UnknownAttributeException(referenceID, name);
-            }
-            
-            const std::string &value = (*param).second;
-            const ParameterInfo &info = (*iter).second;
-            
-            values.insert(std::make_pair(name, ParameterValue(value, reg)));
-        }
-        
+        processParameters(parameters, reg, values);
         return boost::shared_ptr<ComponentType>(new ComponentType(values));
     }
     
