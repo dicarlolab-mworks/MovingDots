@@ -27,7 +27,7 @@ PARAMETER_NAME(DIRECTION, "direction");
 PARAMETER_NAME(SPEED, "speed");
 
 
-void DynamicRandomDots::describe(ComponentInfo &info) {
+void DynamicRandomDots::describeComponent(ComponentInfo &info) {
     info.setSignature("stimulus/dynamic_random_dots");
 
     info.addParameter(TAG, "Dynamic Random Dots");

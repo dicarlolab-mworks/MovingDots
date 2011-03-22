@@ -27,7 +27,7 @@ struct ColorTrio {
 class DynamicRandomDots : public StandardDynamicStimulus {
 
 public:
-    static void describe(ComponentInfo &info);
+    static void describeComponent(ComponentInfo &info);
 
     DynamicRandomDots(const ParameterValueMap &parameters);
     virtual ~DynamicRandomDots();

@@ -71,13 +71,13 @@ class SelfDescribingComponentFactory : public BaseComponentFactory {
     //
     // ComponentType must implement the following methods:
     //
-    // static void describe(ComponentInfo &info);
+    // static void describeComponent(ComponentInfo &info);
     // ComponentType(const ParameterValueMap &parameters);
     //
     
 public:
     SelfDescribingComponentFactory() {
-        ComponentType::describe(info);
+        ComponentType::describeComponent(info);
     }
     
     virtual boost::shared_ptr<mw::Component> createObject(StdStringMap parameters, mw::ComponentRegistry *reg) {
