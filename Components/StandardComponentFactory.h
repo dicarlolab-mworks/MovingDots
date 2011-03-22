@@ -1,5 +1,5 @@
 /*
- *  SelfDescribingComponent.h
+ *  StandardComponentFactory.h
  *  DynamicRandomDots
  *
  *  Created by Christopher Stawarz on 12/13/10.
@@ -7,8 +7,8 @@
  *
  */
 
-#ifndef SelfDescribingComponent_H_
-#define SelfDescribingComponent_H_
+#ifndef StandardComponentFactory_H_
+#define StandardComponentFactory_H_
 
 #include <MWorksCore/ComponentFactory.h>
 
@@ -66,7 +66,7 @@ typedef std::map<std::string, std::string> StdStringMap;
 
 
 template<typename ComponentType>
-class SelfDescribingComponentFactory : public BaseComponentFactory {
+class StandardComponentFactory : public BaseComponentFactory {
 
     //
     // ComponentType must implement the following methods:
@@ -76,7 +76,7 @@ class SelfDescribingComponentFactory : public BaseComponentFactory {
     //
     
 public:
-    SelfDescribingComponentFactory() {
+    StandardComponentFactory() {
         ComponentType::describeComponent(info);
     }
     
@@ -107,23 +107,6 @@ public:
         return boost::shared_ptr<ComponentType>(new ComponentType(values));
     }
 
-};
-
-
-template<typename StimulusType>
-class SelfDescribingStimulusFactory : public SelfDescribingComponentFactory<StimulusType> {
-    
-public:
-    virtual boost::shared_ptr<mw::Component> createObject(StdStringMap parameters, mw::ComponentRegistry *reg) {
-        boost::shared_ptr<StimulusType> newComponent(boost::dynamic_pointer_cast<StimulusType>(SelfDescribingComponentFactory<StimulusType>::createObject(parameters, reg)));
-        
-        newComponent->load(mw::StimulusDisplay::getCurrentStimulusDisplay());
-        boost::shared_ptr<mw::StimulusNode> node(new mw::StimulusNode(newComponent));
-        reg->registerStimulusNode(parameters["tag"], node);
-        
-        return newComponent;
-    }
-    
 };
 
 

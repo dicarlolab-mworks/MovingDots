@@ -9,6 +9,8 @@
 
 #include <MWorksCore/ComponentFactory.h>
 
+#include "StandardStimulusFactory.h"
+
 #include "DynamicRandomDotsPlugin.h"
 #include "DynamicRandomDots.h"
 

@@ -14,7 +14,8 @@
 
 #include <MWorksCore/StandardDynamicStimulus.h>
 
-#include "SelfDescribingComponent.h"
+#include "ComponentInfo.h"
+#include "ParameterValue.h"
 
 using namespace mw;
 
