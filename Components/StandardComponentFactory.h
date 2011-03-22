@@ -13,7 +13,7 @@
 #include <MWorksCore/ComponentFactory.h>
 
 #include "ComponentInfo.h"
-#include "ParameterValue.h"
+#include "ParameterValueMap.h"
 
 
 class UnknownAttributeException : public mw::ComponentFactoryException {

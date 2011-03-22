@@ -90,6 +90,7 @@
 		E16920A813379F7A00838C74 /* ParameterValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParameterValue.cpp; path = Components/ParameterValue.cpp; sourceTree = "<group>"; };
 		E177043212B6AEE600D4DF6D /* StandardComponentFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StandardComponentFactory.h; path = Components/StandardComponentFactory.h; sourceTree = "<group>"; };
 		E1AD98531338F37C009B3BDA /* StandardStimulusFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StandardStimulusFactory.h; path = Components/StandardStimulusFactory.h; sourceTree = "<group>"; };
+		E1AD985E1338F6F0009B3BDA /* ParameterValueMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParameterValueMap.h; path = Components/ParameterValueMap.h; sourceTree = "<group>"; };
 		E1FCD4CE11DAB1AE0037E6FA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -204,6 +205,7 @@
 				E16920A113379F5000838C74 /* ParameterInfo.h */,
 				E16920A713379F7A00838C74 /* ParameterValue.h */,
 				E16920A813379F7A00838C74 /* ParameterValue.cpp */,
+				E1AD985E1338F6F0009B3BDA /* ParameterValueMap.h */,
 				E16920A413379F6200838C74 /* ComponentInfo.h */,
 				E177043212B6AEE600D4DF6D /* StandardComponentFactory.h */,
 				E1AD98531338F37C009B3BDA /* StandardStimulusFactory.h */,

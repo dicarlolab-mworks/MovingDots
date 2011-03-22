@@ -15,7 +15,7 @@
 #include <MWorksCore/StandardDynamicStimulus.h>
 
 #include "ComponentInfo.h"
-#include "ParameterValue.h"
+#include "ParameterValueMap.h"
 
 using namespace mw;
 
