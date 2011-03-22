@@ -71,9 +71,6 @@ DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
 { }
 
 
-DynamicRandomDots::~DynamicRandomDots() { }
-
-
 void DynamicRandomDots::load(shared_ptr<StimulusDisplay> display) {
     if (loaded)
         return;

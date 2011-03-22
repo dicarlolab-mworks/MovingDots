@@ -16,24 +16,17 @@
 #include "ParameterValue.h"
 
 
-class ParameterValueMap {
+class ParameterValueMap : public std::map<std::string, ParameterValue> {
     
 public:
-    void addValue(const std::string &name, const ParameterValue &value) {
-        values.insert(std::make_pair(name, value));
-    }
-    
     const ParameterValue& operator [](const std::string &name) const {
-        std::map<std::string, ParameterValue>::const_iterator iter = values.find(name);
-        if (iter == values.end()) {
+        ParameterValueMap::const_iterator iter = find(name);
+        if (iter == end()) {
             // FIXME: this is an internal, programmer error and should be flagged as such
             throw mw::SimpleException("unknown parameter", name);
         }
         return (*iter).second;
     }
-    
-private:
-    std::map<std::string, ParameterValue> values;
     
 };
 

@@ -10,6 +10,7 @@
 #ifndef DynamicRandomDots_H_
 #define DynamicRandomDots_H_
 
+#include <boost/noncopyable.hpp>
 #include <boost/random.hpp>
 
 #include <MWorksCore/StandardDynamicStimulus.h>
@@ -25,13 +26,13 @@ struct ColorTrio {
 };
 
 
-class DynamicRandomDots : public StandardDynamicStimulus {
+class DynamicRandomDots : public StandardDynamicStimulus, boost::noncopyable {
 
 public:
     static void describeComponent(ComponentInfo &info);
 
     DynamicRandomDots(const ParameterValueMap &parameters);
-    virtual ~DynamicRandomDots();
+    virtual ~DynamicRandomDots() { }
     
     virtual void willPlay();
     virtual void didStop();
@@ -41,8 +42,6 @@ public:
     virtual Datum getCurrentAnnounceDrawData();
     
 private:
-    DynamicRandomDots(const DynamicRandomDots &tocopy);
-    
     void validateParameters();
     void computeDotSizeInPixels(shared_ptr<StimulusDisplay> display);
     void initializeDots();
@@ -55,12 +54,12 @@ private:
         return randVar();
     }
     
-    GLfloat fieldRadius;
-    GLfloat fieldCenterX, fieldCenterY;
-    GLint numDots;
-    GLfloat dotSize;
-    ColorTrio color;
-    GLfloat alpha;
+    const GLfloat fieldRadius;
+    const GLfloat fieldCenterX, fieldCenterY;
+    const GLint numDots;
+    const GLfloat dotSize;
+    const ColorTrio color;
+    const GLfloat alpha;
     shared_ptr<Variable> direction;
     shared_ptr<Variable> speed;
     

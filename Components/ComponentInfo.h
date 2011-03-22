@@ -17,7 +17,7 @@
 #include "ParameterInfo.h"
 
 
-typedef std::vector<std::string> StdStringVector;
+typedef std::vector<std::string> StringVector;
 typedef std::map<std::string, ParameterInfo> ParameterInfoMap;
 
 
@@ -51,14 +51,14 @@ public:
         return parameters;
     }
     
-    const StdStringVector& getRequiredParameters() const {
+    const StringVector& getRequiredParameters() const {
         return requiredParameters;
     }
     
 private:
     std::string signature;
     ParameterInfoMap parameters;
-    StdStringVector requiredParameters;
+    StringVector requiredParameters;
     
 };
 

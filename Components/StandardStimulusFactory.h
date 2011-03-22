@@ -14,17 +14,20 @@
 
 
 template<typename StimulusType>
-class SelfDescribingStimulusFactory : public StandardComponentFactory<StimulusType> {
+class StandardStimulusFactory : public StandardComponentFactory<StimulusType> {
     
 public:
-    virtual boost::shared_ptr<mw::Component> createObject(StdStringMap parameters, mw::ComponentRegistry *reg) {
-        boost::shared_ptr<StimulusType> newComponent(boost::dynamic_pointer_cast<StimulusType>(StandardComponentFactory<StimulusType>::createObject(parameters, reg)));
+    virtual boost::shared_ptr<mw::Component> createObject(StringMap parameters, mw::ComponentRegistry *reg) {
+        ParameterValueMap values;
+        boost::shared_ptr<StimulusType> stim(StandardComponentFactory<StimulusType>::createObject(parameters,
+                                                                                                  reg,
+                                                                                                  values));
         
-        newComponent->load(mw::StimulusDisplay::getCurrentStimulusDisplay());
-        boost::shared_ptr<mw::StimulusNode> node(new mw::StimulusNode(newComponent));
-        reg->registerStimulusNode(parameters["tag"], node);
+        stim->load(mw::StimulusDisplay::getCurrentStimulusDisplay());
+        boost::shared_ptr<mw::StimulusNode> node(new mw::StimulusNode(stim));
+        reg->registerStimulusNode(values["tag"], node);
         
-        return newComponent;
+        return stim;
     }
     
 };
