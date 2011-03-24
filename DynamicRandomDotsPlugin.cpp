@@ -7,19 +7,21 @@
  *
  */
 
+#include <MWorksCore/Plugin.h>
 #include <MWorksCore/StandardStimulusFactory.h>
 
-#include "DynamicRandomDotsPlugin.h"
 #include "DynamicRandomDots.h"
 
 using namespace mw;
 
 
-Plugin* getPlugin() {
+class DynamicRandomDotsPlugin : public Plugin {
+	virtual void registerComponents(shared_ptr<ComponentRegistry> registry) {
+        registry->registerFactory<StandardStimulusFactory, DynamicRandomDots>();
+    }	
+};
+
+
+extern "C" Plugin* getPlugin() {
     return new DynamicRandomDotsPlugin();
-}
-
-
-void DynamicRandomDotsPlugin::registerComponents(shared_ptr<ComponentRegistry> registry) {
-    registry->registerFactory<StandardStimulusFactory, DynamicRandomDots>();
 }

@@ -76,7 +76,6 @@
 		5C78EE6B115D02EE00151A76 /* Development.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Development.xcconfig; path = "/Library/Application Support/MWorks/Developer/Xcode/Development.xcconfig"; sourceTree = "<absolute>"; };
 		5C78EE6C115D02EE00151A76 /* WARNING.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = WARNING.txt; path = "/Library/Application Support/MWorks/Developer/Xcode/WARNING.txt"; sourceTree = "<absolute>"; };
 		5CF9AEB90FD5795C00F405F6 /* DynamicRandomDotsPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DynamicRandomDotsPlugin.cpp; sourceTree = SOURCE_ROOT; };
-		5CF9AEBA0FD5795C00F405F6 /* DynamicRandomDotsPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicRandomDotsPlugin.h; sourceTree = SOURCE_ROOT; };
 		5CFCAB091105FB4C007CE55F /* MWLibrary.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = MWLibrary.xml; sourceTree = "<group>"; };
 		5CFE59180F571B15000C7F30 /* DynamicRandomDots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicRandomDots.h; sourceTree = SOURCE_ROOT; };
 		5CFE59190F571B15000C7F30 /* DynamicRandomDots.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DynamicRandomDots.cpp; sourceTree = SOURCE_ROOT; };
@@ -135,7 +134,6 @@
 			children = (
 				5CFE59180F571B15000C7F30 /* DynamicRandomDots.h */,
 				5CFE59190F571B15000C7F30 /* DynamicRandomDots.cpp */,
-				5CF9AEBA0FD5795C00F405F6 /* DynamicRandomDotsPlugin.h */,
 				5CF9AEB90FD5795C00F405F6 /* DynamicRandomDotsPlugin.cpp */,
 			);
 			name = Classes;
