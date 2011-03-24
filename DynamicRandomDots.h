@@ -13,8 +13,6 @@
 #include <boost/noncopyable.hpp>
 #include <boost/random.hpp>
 
-#include <MWorksCore/ComponentInfo.h>
-#include <MWorksCore/ParameterValue.h>
 #include <MWorksCore/StandardDynamicStimulus.h>
 
 using namespace mw;
@@ -30,7 +28,7 @@ class DynamicRandomDots : public StandardDynamicStimulus, boost::noncopyable {
 public:
     static void describeComponent(ComponentInfo &info);
 
-    DynamicRandomDots(const ParameterValueMap &parameters);
+    explicit DynamicRandomDots(const ParameterValueMap &parameters);
     virtual ~DynamicRandomDots() { }
     
     virtual void willPlay();

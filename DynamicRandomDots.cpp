@@ -11,27 +11,25 @@
 
 #include <MWorksCore/ParsedColorTrio.h>
 
-#define PARAMETER_NAME(name, value)  static const std::string name(value)
 
+static const std::string SIGNATURE("stimulus/dynamic_random_dots");
 
-PARAMETER_NAME(TAG, "tag");
-PARAMETER_NAME(FRAMES_PER_SECOND, "frames_per_second");
-PARAMETER_NAME(FIELD_RADIUS, "field_radius");
-PARAMETER_NAME(FIELD_CENTER_X, "field_center_x");
-PARAMETER_NAME(FIELD_CENTER_Y, "field_center_y");
-PARAMETER_NAME(NUM_DOTS, "num_dots");
-PARAMETER_NAME(DOT_SIZE, "dot_size");
-PARAMETER_NAME(COLOR, "color");
-PARAMETER_NAME(ALPHA_MULTIPLIER, "alpha_multiplier");
-PARAMETER_NAME(DIRECTION, "direction");
-PARAMETER_NAME(SPEED, "speed");
+static const std::string FIELD_RADIUS("field_radius");
+static const std::string FIELD_CENTER_X("field_center_x");
+static const std::string FIELD_CENTER_Y("field_center_y");
+static const std::string NUM_DOTS("num_dots");
+static const std::string DOT_SIZE("dot_size");
+static const std::string COLOR("color");
+static const std::string ALPHA_MULTIPLIER("alpha_multiplier");
+static const std::string DIRECTION("direction");
+static const std::string SPEED("speed");
 
 
 void DynamicRandomDots::describeComponent(ComponentInfo &info) {
-    info.setSignature("stimulus/dynamic_random_dots");
+    StandardDynamicStimulus::describeComponent(info);
+    
+    info.setSignature(SIGNATURE);
 
-    info.addParameter(TAG, "Dynamic Random Dots");
-    info.addParameter(FRAMES_PER_SECOND, "60");
     info.addParameter(FIELD_RADIUS);
     info.addParameter(FIELD_CENTER_X);
     info.addParameter(FIELD_CENTER_Y);
@@ -60,7 +58,7 @@ END_NAMESPACE(mw)
 
 
 DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
-    StandardDynamicStimulus(parameters[TAG], parameters[FRAMES_PER_SECOND]),
+    StandardDynamicStimulus(parameters),
     fieldRadius(parameters[FIELD_RADIUS]),
     fieldCenterX(parameters[FIELD_CENTER_X]),
     fieldCenterY(parameters[FIELD_CENTER_Y]),
@@ -209,22 +207,22 @@ void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display, int frame
 
 
 Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
-	boost::mutex::scoped_lock locker(stim_lock);
-	Datum announceData = StandardDynamicStimulus::getCurrentAnnounceDrawData();
-	announceData.addElement(STIM_TYPE, "dynamic_random_dots");
-	announceData.addElement("field_radius", fieldRadius);
-	announceData.addElement("field_center_x", fieldCenterX);
-	announceData.addElement("field_center_y", fieldCenterY);
-	announceData.addElement("num_dots", (long)numDots);
-	announceData.addElement("dot_size", dotSize);
+    boost::mutex::scoped_lock locker(stim_lock);
+    Datum announceData = StandardDynamicStimulus::getCurrentAnnounceDrawData();
+    announceData.addElement(STIM_TYPE, SIGNATURE);
+    announceData.addElement(FIELD_RADIUS, fieldRadius);
+    announceData.addElement(FIELD_CENTER_X, fieldCenterX);
+    announceData.addElement(FIELD_CENTER_Y, fieldCenterY);
+    announceData.addElement(NUM_DOTS, (long)numDots);
+    announceData.addElement(DOT_SIZE, dotSize);
     announceData.addElement(STIM_COLOR_R, color.red);
     announceData.addElement(STIM_COLOR_G, color.green);
     announceData.addElement(STIM_COLOR_B, color.blue);
-    announceData.addElement("alpha_multiplier", alpha);
-	announceData.addElement("direction", direction->getValue().getFloat());
-	announceData.addElement("speed", speed->getValue().getFloat());
-
-	return announceData;
+    announceData.addElement(ALPHA_MULTIPLIER, alpha);
+    announceData.addElement(DIRECTION, direction->getValue().getFloat());
+    announceData.addElement(SPEED, speed->getValue().getFloat());
+    
+    return announceData;
 }
 
 
