@@ -13,10 +13,9 @@
 #include <boost/noncopyable.hpp>
 #include <boost/random.hpp>
 
+#include <MWorksCore/ComponentInfo.h>
+#include <MWorksCore/ParameterValue.h>
 #include <MWorksCore/StandardDynamicStimulus.h>
-
-#include "ComponentInfo.h"
-#include "ParameterValue.h"
 
 using namespace mw;
 

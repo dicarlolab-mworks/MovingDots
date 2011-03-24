@@ -7,9 +7,7 @@
  *
  */
 
-#include <MWorksCore/ComponentFactory.h>
-
-#include "StandardStimulusFactory.h"
+#include <MWorksCore/StandardStimulusFactory.h>
 
 #include "DynamicRandomDotsPlugin.h"
 #include "DynamicRandomDots.h"
@@ -23,5 +21,5 @@ Plugin* getPlugin() {
 
 
 void DynamicRandomDotsPlugin::registerComponents(shared_ptr<ComponentRegistry> registry) {
-    BaseComponentFactory::registerFactory<StandardStimulusFactory, DynamicRandomDots>(registry);
+    registry->registerFactory<StandardStimulusFactory, DynamicRandomDots>();
 }

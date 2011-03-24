@@ -44,6 +44,7 @@ void DynamicRandomDots::describeComponent(ComponentInfo &info) {
 }
 
 
+BEGIN_NAMESPACE(mw)
 template<>
 ColorTrio ParameterValue::convert(const std::string &s, mw::ComponentRegistry *reg) {
     ColorTrio ct;
@@ -55,6 +56,7 @@ ColorTrio ParameterValue::convert(const std::string &s, mw::ComponentRegistry *r
 
     return ct;
 }
+END_NAMESPACE(mw)
 
 
 DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
