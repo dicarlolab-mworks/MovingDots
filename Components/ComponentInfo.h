@@ -10,7 +10,6 @@
 #ifndef ComponentInfo_H_
 #define ComponentInfo_H_
 
-#include <map>
 #include <string>
 #include <vector>
 
@@ -18,7 +17,6 @@
 
 
 typedef std::vector<std::string> StringVector;
-typedef std::map<std::string, ParameterInfo> ParameterInfoMap;
 
 
 class ComponentInfo {

@@ -13,10 +13,10 @@
 #include <MWorksCore/ComponentFactory.h>
 
 #include "ComponentInfo.h"
-#include "ParameterValueMap.h"
+#include "ParameterValue.h"
 
 
-typedef std::map<std::string, std::string> StringMap;
+typedef std::map<std::string, std::string> StdStringMap;
 
 
 class UnknownAttributeException : public mw::ComponentFactoryException {
@@ -51,12 +51,12 @@ public:
     }
 
 protected:
-    void processParameters(StringMap &parameters, mw::ComponentRegistry *reg, ParameterValueMap &values) {
+    void processParameters(StdStringMap &parameters, mw::ComponentRegistry *reg, ParameterValueMap &values) {
         requireAttributes(parameters, info.getRequiredParameters());
         
         const ParameterInfoMap &infoMap = info.getParameters();
         
-        for (StringMap::iterator param = parameters.begin(); param != parameters.end(); param++) {
+        for (StdStringMap::iterator param = parameters.begin(); param != parameters.end(); param++) {
             const std::string &name = (*param).first;
             ParameterInfoMap::const_iterator iter = infoMap.find(name);
             
@@ -104,13 +104,13 @@ public:
         ComponentType::describeComponent(info);
     }
     
-    virtual boost::shared_ptr<mw::Component> createObject(StringMap parameters, mw::ComponentRegistry *reg) {
+    virtual boost::shared_ptr<mw::Component> createObject(StdStringMap parameters, mw::ComponentRegistry *reg) {
         ParameterValueMap values;
         return createObject(parameters, reg, values);
     }
  
 protected:
-    virtual boost::shared_ptr<ComponentType> createObject(StringMap &parameters,
+    virtual boost::shared_ptr<ComponentType> createObject(StdStringMap &parameters,
                                                           mw::ComponentRegistry *reg,
                                                           ParameterValueMap &values)
     {

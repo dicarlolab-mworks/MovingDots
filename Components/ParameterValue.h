@@ -16,6 +16,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <MWorksCore/ComponentRegistry.h>
+#include <MWorksCore/Map.h>
 
 
 typedef boost::shared_ptr<mw::Variable> VariablePtr;
@@ -68,6 +69,9 @@ const std::string& ParameterValue::convert(const std::string &s, mw::ComponentRe
 
 template<>
 VariablePtr ParameterValue::convert(const std::string &s, mw::ComponentRegistry *reg);
+
+
+typedef mw::Map<ParameterValue> ParameterValueMap;
 
 
 #endif

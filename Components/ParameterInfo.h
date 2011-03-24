@@ -12,6 +12,8 @@
 
 #include <string>
 
+#include <MWorksCore/Map.h>
+
 
 class ParameterInfo {
     
@@ -38,6 +40,9 @@ private:
     std::string defaultValue;
     
 };
+
+
+typedef mw::Map<ParameterInfo> ParameterInfoMap;
 
 
 #endif
