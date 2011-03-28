@@ -42,21 +42,6 @@ void DynamicRandomDots::describeComponent(ComponentInfo &info) {
 }
 
 
-BEGIN_NAMESPACE(mw)
-template<>
-ColorTrio ParameterValue::convert(const std::string &s, mw::ComponentRegistry *reg) {
-    ColorTrio ct;
-
-    ParsedColorTrio pct = ParsedColorTrio(reg, s);
-    ct.red = pct.getR()->getValue().getFloat();
-    ct.green = pct.getG()->getValue().getFloat();
-    ct.blue = pct.getB()->getValue().getFloat();
-
-    return ct;
-}
-END_NAMESPACE(mw)
-
-
 DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
     StandardDynamicStimulus(parameters),
     fieldRadius(parameters[FIELD_RADIUS]),

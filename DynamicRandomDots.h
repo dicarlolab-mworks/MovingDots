@@ -18,11 +18,6 @@
 using namespace mw;
 
 
-struct ColorTrio {
-    GLfloat red, green, blue;
-};
-
-
 class DynamicRandomDots : public StandardDynamicStimulus, boost::noncopyable {
 
 public:
@@ -55,7 +50,7 @@ private:
     const GLfloat fieldCenterX, fieldCenterY;
     const GLint numDots;
     const GLfloat dotSize;
-    const ColorTrio color;
+    const mw::RGBColor color;
     const GLfloat alpha;
     shared_ptr<Variable> direction;
     shared_ptr<Variable> speed;
