@@ -12,8 +12,6 @@
 #include <MWorksCore/ParsedColorTrio.h>
 
 
-static const std::string SIGNATURE("stimulus/dynamic_random_dots");
-
 static const std::string FIELD_RADIUS("field_radius");
 static const std::string FIELD_CENTER_X("field_center_x");
 static const std::string FIELD_CENTER_Y("field_center_y");
@@ -28,7 +26,7 @@ static const std::string SPEED("speed");
 void DynamicRandomDots::describeComponent(ComponentInfo &info) {
     StandardDynamicStimulus::describeComponent(info);
     
-    info.setSignature(SIGNATURE);
+    info.setSignature("stimulus/dynamic_random_dots");
 
     info.addParameter(FIELD_RADIUS);
     info.addParameter(FIELD_CENTER_X);
@@ -194,7 +192,7 @@ void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display, int frame
 Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
     boost::mutex::scoped_lock locker(stim_lock);
     Datum announceData = StandardDynamicStimulus::getCurrentAnnounceDrawData();
-    announceData.addElement(STIM_TYPE, SIGNATURE);
+    announceData.addElement(STIM_TYPE, "dynamic_random_dots");
     announceData.addElement(FIELD_RADIUS, fieldRadius);
     announceData.addElement(FIELD_CENTER_X, fieldCenterX);
     announceData.addElement(FIELD_CENTER_Y, fieldCenterY);
