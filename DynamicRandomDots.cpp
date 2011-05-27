@@ -21,6 +21,7 @@ static const std::string COLOR("color");
 static const std::string ALPHA_MULTIPLIER("alpha_multiplier");
 static const std::string DIRECTION("direction");
 static const std::string SPEED("speed");
+static const std::string ANNOUNCE_DOTS("announce_dots");
 
 
 void DynamicRandomDots::describeComponent(ComponentInfo &info) {
@@ -37,6 +38,7 @@ void DynamicRandomDots::describeComponent(ComponentInfo &info) {
     info.addParameter(ALPHA_MULTIPLIER, "1.0");
     info.addParameter(DIRECTION);
     info.addParameter(SPEED);
+    info.addParameter(ANNOUNCE_DOTS, "0");
 }
 
 
@@ -50,7 +52,8 @@ DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
     color(parameters[COLOR]),
     alpha(parameters[ALPHA_MULTIPLIER]),
     direction(parameters[DIRECTION]),
-    speed(parameters[SPEED])
+    speed(parameters[SPEED]),
+    announceDots(parameters[ANNOUNCE_DOTS])
 { }
 
 
@@ -191,7 +194,9 @@ void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display, int frame
 
 Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
     boost::mutex::scoped_lock locker(stim_lock);
+
     Datum announceData = StandardDynamicStimulus::getCurrentAnnounceDrawData();
+
     announceData.addElement(STIM_TYPE, "dynamic_random_dots");
     announceData.addElement(FIELD_RADIUS, fieldRadius);
     announceData.addElement(FIELD_CENTER_X, fieldCenterX);
@@ -204,6 +209,12 @@ Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
     announceData.addElement(ALPHA_MULTIPLIER, alpha);
     announceData.addElement(DIRECTION, direction->getValue().getFloat());
     announceData.addElement(SPEED, speed->getValue().getFloat());
+    
+    if (announceDots->getValue().getBool()) {
+        Datum dotsData;
+        dotsData.setString((char*)(&(dots[0])), dots.size() * sizeof(GLfloat));
+        announceData.addElement("dots", dotsData);
+    }
     
     return announceData;
 }

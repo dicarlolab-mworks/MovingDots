@@ -54,6 +54,7 @@ private:
     const GLfloat alpha;
     shared_ptr<Variable> direction;
     shared_ptr<Variable> speed;
+    shared_ptr<Variable> announceDots;
     
     static const GLint verticesPerDot = 2;
     std::vector<GLfloat> dots;

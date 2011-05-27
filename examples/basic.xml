@@ -11,11 +11,12 @@
         <variable tag="direction" scope="global" logging="when_changed" default_value="45" type="float"></variable>
         <variable tag="speed" scope="global" logging="when_changed" default_value="2" type="float"></variable>
         <variable tag="stop" scope="global" logging="when_changed" default_value="0" type="boolean"></variable>
+        <variable tag="announce_dots" scope="global" logging="when_changed" default_value="0" type="boolean"></variable>
     </variables>
     <sounds tag="Sounds"></sounds>
     <stimuli tag="Stimuli">
         <stimulus tag="background" full_name="background" type="blank_screen" color="0.5, 0.5, 0.5"></stimulus>
-        <stimulus type="dynamic_random_dots" tag="dots" frames_per_second="frames_per_second" field_radius="field_radius" field_center_x="field_center_x" field_center_y="field_center_y" num_dots="num_dots" dot_size="dot_size" color="1.0,1.0,1.0" alpha_multiplier="1.0" direction="direction" speed="speed"></stimulus>
+        <stimulus type="dynamic_random_dots" tag="dots" frames_per_second="frames_per_second" field_radius="field_radius" field_center_x="field_center_x" field_center_y="field_center_y" num_dots="num_dots" dot_size="dot_size" color="1.0,1.0,1.0" alpha_multiplier="1.0" direction="direction" speed="speed" announce_dots="announce_dots"></stimulus>
     </stimuli>
     <filters tag="Filters"></filters>
     <optimizers tag="Optimizers"></optimizers>
