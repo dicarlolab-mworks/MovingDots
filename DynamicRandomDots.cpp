@@ -28,6 +28,8 @@ void DynamicRandomDots::describeComponent(ComponentInfo &info) {
     StandardDynamicStimulus::describeComponent(info);
     
     info.setSignature("stimulus/dynamic_random_dots");
+    info.setDisplayName("Dynamic Random Dots");
+    info.setDescription("A dynamic random dots stimulus.");
 
     info.addParameter(FIELD_RADIUS);
     info.addParameter(FIELD_CENTER_X);

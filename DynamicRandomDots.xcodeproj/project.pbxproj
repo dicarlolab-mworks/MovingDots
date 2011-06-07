@@ -34,7 +34,6 @@
 
 /* Begin PBXBuildFile section */
 		5CF9AEBC0FD5795C00F405F6 /* DynamicRandomDotsPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF9AEB90FD5795C00F405F6 /* DynamicRandomDotsPlugin.cpp */; };
-		5CFCAB0A1105FB4C007CE55F /* MWLibrary.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5CFCAB091105FB4C007CE55F /* MWLibrary.xml */; };
 		5CFE591A0F571B15000C7F30 /* DynamicRandomDots.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CFE59190F571B15000C7F30 /* DynamicRandomDots.cpp */; };
 		BFBFB0D610446C180019216B /* MWorksCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBFB0D510446C180019216B /* MWorksCore.framework */; };
 		E12A26FD1201E31400CE8C55 /* DynamicRandomDots.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D5B49B6048680CD000E48DA /* DynamicRandomDots.bundle */; };
@@ -76,7 +75,6 @@
 		5C78EE6B115D02EE00151A76 /* Development.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Development.xcconfig; path = "/Library/Application Support/MWorks/Developer/Xcode/Development.xcconfig"; sourceTree = "<absolute>"; };
 		5C78EE6C115D02EE00151A76 /* WARNING.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = WARNING.txt; path = "/Library/Application Support/MWorks/Developer/Xcode/WARNING.txt"; sourceTree = "<absolute>"; };
 		5CF9AEB90FD5795C00F405F6 /* DynamicRandomDotsPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DynamicRandomDotsPlugin.cpp; sourceTree = SOURCE_ROOT; };
-		5CFCAB091105FB4C007CE55F /* MWLibrary.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = MWLibrary.xml; sourceTree = "<group>"; };
 		5CFE59180F571B15000C7F30 /* DynamicRandomDots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicRandomDots.h; sourceTree = SOURCE_ROOT; };
 		5CFE59190F571B15000C7F30 /* DynamicRandomDots.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DynamicRandomDots.cpp; sourceTree = SOURCE_ROOT; };
 		8D5B49B6048680CD000E48DA /* DynamicRandomDots.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DynamicRandomDots.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,7 +101,6 @@
 			children = (
 				5C78EE69115D02C700151A76 /* External Config */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
-				5CFE591C0F571BEB000C7F30 /* Editor Definitions */,
 				32C88E010371C26100C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
@@ -180,14 +177,6 @@
 			name = "External Config";
 			sourceTree = "<group>";
 		};
-		5CFE591C0F571BEB000C7F30 /* Editor Definitions */ = {
-			isa = PBXGroup;
-			children = (
-				5CFCAB091105FB4C007CE55F /* MWLibrary.xml */,
-			);
-			name = "Editor Definitions";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -240,7 +229,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CFCAB0A1105FB4C007CE55F /* MWLibrary.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
