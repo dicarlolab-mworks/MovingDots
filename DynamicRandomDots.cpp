@@ -55,7 +55,9 @@ DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
     alpha(parameters[ALPHA_MULTIPLIER]),
     direction(parameters[DIRECTION]),
     speed(parameters[SPEED]),
-    announceDots(parameters[ANNOUNCE_DOTS])
+    announceDots(parameters[ANNOUNCE_DOTS]),
+    previousTime(-1),
+    currentTime(-1)
 { }
 
 
@@ -152,23 +154,15 @@ void DynamicRandomDots::updateDots() {
 }
 
 
-void DynamicRandomDots::willPlay() {
-    StandardDynamicStimulus::willPlay();
-    previousTime = 0;
-}
-
-
-void DynamicRandomDots::didStop() {
-    StandardDynamicStimulus::didStop();
-    previousTime = -1;
-}
-
-
-void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display, int frameNumber) {
+void DynamicRandomDots::draw(shared_ptr<StimulusDisplay> display) {
+    boost::mutex::scoped_lock locker(stim_lock);
+    
     // If we're drawing to the main display, update dot positions
     if (display->getCurrentContextIndex() == 0) {
         currentTime = getElapsedTime();
-        updateDots();
+        if (previousTime != -1) {
+            updateDots();
+        }
         previousTime = currentTime;
     }
 

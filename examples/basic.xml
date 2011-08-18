@@ -2,7 +2,6 @@
 <monkeyml version="1.0">
     <io_devices tag="IO Devices"></io_devices>
     <variables tag="Variables">
-        <variable tag="frames_per_second" scope="global" logging="when_changed" default_value="refreshRate()" type="float"></variable>
         <variable tag="field_radius" scope="global" logging="when_changed" default_value="10" type="float"></variable>
         <variable tag="field_center_x" scope="global" logging="when_changed" default_value="0" type="float"></variable>
         <variable tag="field_center_y" scope="global" logging="when_changed" default_value="0" type="float"></variable>
@@ -16,7 +15,7 @@
     <sounds tag="Sounds"></sounds>
     <stimuli tag="Stimuli">
         <stimulus tag="background" full_name="background" type="blank_screen" color="0.5, 0.5, 0.5"></stimulus>
-        <stimulus type="dynamic_random_dots" tag="dots" frames_per_second="frames_per_second" field_radius="field_radius" field_center_x="field_center_x" field_center_y="field_center_y" num_dots="num_dots" dot_size="dot_size" color="1.0,1.0,1.0" alpha_multiplier="1.0" direction="direction" speed="speed" announce_dots="announce_dots"></stimulus>
+        <stimulus type="dynamic_random_dots" tag="dots" field_radius="field_radius" field_center_x="field_center_x" field_center_y="field_center_y" num_dots="num_dots" dot_size="dot_size" color="1.0,1.0,1.0" alpha_multiplier="1.0" direction="direction" speed="speed" announce_dots="announce_dots"></stimulus>
     </stimuli>
     <filters tag="Filters"></filters>
     <optimizers tag="Optimizers"></optimizers>
@@ -30,14 +29,12 @@
                     <action tag="Queue background" type="queue_stimulus" stimulus="background"></action>
                     <action tag="Queue dots" type="queue_stimulus" stimulus="dots"></action>
                     <action tag="Update display" type="update_stimulus_display"></action>
-                    <action tag="Start dots" stimulus="dots" type="play_dynamic_stimulus"></action>
                     <transition_marker _unmoveable="1" tag="Transitions"></transition_marker>
                     <transition type="conditional" tag="If Condition is True, Transition to ..." condition="stop" target="Exit State System"></transition>
                 </task_system_state>
                 <task_system_state tag="Exit State System" interruptible="YES">
                     <action_marker _unmoveable="1" tag="Actions"></action_marker>
                     <action type="report" tag="Announce Exit State System" message="Leaving state system"></action>
-                    <action tag="Stop dots" stimulus="dots" type="stop_dynamic_stimulus"></action>
                     <transition_marker _unmoveable="1" tag="Transitions"></transition_marker>
                     <transition tag="Return to parent task system" type="yield"></transition>
                 </task_system_state>

@@ -10,7 +10,6 @@
 #ifndef DynamicRandomDots_H_
 #define DynamicRandomDots_H_
 
-#include <boost/noncopyable.hpp>
 #include <boost/random.hpp>
 
 #include <MWorksCore/StandardDynamicStimulus.h>
@@ -18,7 +17,7 @@
 using namespace mw;
 
 
-class DynamicRandomDots : public StandardDynamicStimulus, boost::noncopyable {
+class DynamicRandomDots : public StandardDynamicStimulus {
 
 public:
     static void describeComponent(ComponentInfo &info);
@@ -26,11 +25,8 @@ public:
     explicit DynamicRandomDots(const ParameterValueMap &parameters);
     virtual ~DynamicRandomDots() { }
     
-    virtual void willPlay();
-    virtual void didStop();
-    
     virtual void load(shared_ptr<StimulusDisplay> display);
-    virtual void drawFrame(shared_ptr<StimulusDisplay> display, int frameNumber);
+    virtual void draw(shared_ptr<StimulusDisplay> display);
     virtual Datum getCurrentAnnounceDrawData();
     
 private:

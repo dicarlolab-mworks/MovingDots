@@ -2,7 +2,6 @@
 <monkeyml version="1.0">
     <io_devices tag="IO Devices"></io_devices>
     <variables tag="Variables">
-        <variable tag="frames_per_second" scope="global" logging="when_changed" default_value="refreshRate()" type="float"></variable>
         <variable tag="field_radius" scope="global" logging="when_changed" default_value="8" type="float"></variable>
         <variable tag="field_center_x" scope="global" logging="when_changed" default_value="8.5" type="float"></variable>
         <variable tag="field_center_y" scope="global" logging="when_changed" default_value="8.5" type="float"></variable>
@@ -33,7 +32,7 @@
         <stimulus tag="background" full_name="background" type="blank_screen" color="0.5, 0.5, 0.5"></stimulus>
         <range_replicator tag="New Replicator" from="0" to="1" step="1" variable="i">
             <range_replicator tag="New Replicator 2" from="0" to="1" step="1" variable="j">
-                <stimulus type="dynamic_random_dots" tag="dots${i}${j}" frames_per_second="frames_per_second" field_radius="field_radius" field_center_x="field_center_x * pow(-1, ${i})" field_center_y="field_center_y * pow(-1, ${j})" num_dots="num_dots" dot_size="dot_size" color="color_r_${i}${j},color_g_${i}${j},color_b_${i}${j}" alpha_multiplier="1.0" direction="direction + 270*(int)(${i}==0 &amp;&amp; ${j}==1) + 90*(int)(${i}==1 &amp;&amp; ${j}==0) + 180*(int)(${i}==1 &amp;&amp; ${j}==1)" speed="speed"></stimulus>
+                <stimulus type="dynamic_random_dots" tag="dots${i}${j}" field_radius="field_radius" field_center_x="field_center_x * pow(-1, ${i})" field_center_y="field_center_y * pow(-1, ${j})" num_dots="num_dots" dot_size="dot_size" color="color_r_${i}${j},color_g_${i}${j},color_b_${i}${j}" alpha_multiplier="1.0" direction="direction + 270*(int)(${i}==0 &amp;&amp; ${j}==1) + 90*(int)(${i}==1 &amp;&amp; ${j}==0) + 180*(int)(${i}==1 &amp;&amp; ${j}==1)" speed="speed"></stimulus>
             </range_replicator>
         </range_replicator>
     </stimuli>
@@ -52,20 +51,12 @@
                     <action tag="Queue dots10" type="queue_stimulus" stimulus="dots10"></action>
                     <action tag="Queue dots11" type="queue_stimulus" stimulus="dots11"></action>
                     <action tag="Update display" type="update_stimulus_display"></action>
-                    <action tag="Start dots00" stimulus="dots00" type="play_dynamic_stimulus"></action>
-                    <action tag="Start dots01" stimulus="dots01" type="play_dynamic_stimulus"></action>
-                    <action tag="Start dots10" stimulus="dots10" type="play_dynamic_stimulus"></action>
-                    <action tag="Start dots11" stimulus="dots11" type="play_dynamic_stimulus"></action>
                     <transition_marker _unmoveable="1" tag="Transitions"></transition_marker>
                     <transition type="conditional" tag="If Condition is True, Transition to ..." condition="stop" target="Exit State System"></transition>
                 </task_system_state>
                 <task_system_state tag="Exit State System" interruptible="YES">
                     <action_marker _unmoveable="1" tag="Actions"></action_marker>
                     <action type="report" tag="Announce Exit State System" message="Leaving state system"></action>
-                    <action tag="Stop dots00" stimulus="dots00" type="stop_dynamic_stimulus"></action>
-                    <action tag="Stop dots01" stimulus="dots01" type="stop_dynamic_stimulus"></action>
-                    <action tag="Stop dots10" stimulus="dots10" type="stop_dynamic_stimulus"></action>
-                    <action tag="Stop dots11" stimulus="dots11" type="stop_dynamic_stimulus"></action>
                     <transition_marker _unmoveable="1" tag="Transitions"></transition_marker>
                     <transition tag="Return to parent task system" type="yield"></transition>
                 </task_system_state>
