@@ -154,9 +154,7 @@ void DynamicRandomDots::updateDots() {
 }
 
 
-void DynamicRandomDots::draw(shared_ptr<StimulusDisplay> display) {
-    boost::mutex::scoped_lock locker(stim_lock);
-    
+void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     // If we're drawing to the main display, update dot positions
     if (display->getCurrentContextIndex() == 0) {
         currentTime = getElapsedTime();
@@ -213,6 +211,12 @@ Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
     }
     
     return announceData;
+}
+
+
+void DynamicRandomDots::stopPlaying() {
+    StandardDynamicStimulus::stopPlaying();
+    previousTime = -1;
 }
 
 

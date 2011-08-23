@@ -37,6 +37,7 @@
 		5CFE591A0F571B15000C7F30 /* DynamicRandomDots.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CFE59190F571B15000C7F30 /* DynamicRandomDots.cpp */; };
 		BFBFB0D610446C180019216B /* MWorksCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBFB0D510446C180019216B /* MWorksCore.framework */; };
 		E12A26FD1201E31400CE8C55 /* DynamicRandomDots.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D5B49B6048680CD000E48DA /* DynamicRandomDots.bundle */; };
+		E162635B1403F774000F89CB /* MWLibrary.xml in Resources */ = {isa = PBXBuildFile; fileRef = E162635A1403F774000F89CB /* MWLibrary.xml */; };
 		E1FCD4CF11DAB1AE0037E6FA /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1FCD4CE11DAB1AE0037E6FA /* OpenGL.framework */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +81,7 @@
 		8D5B49B6048680CD000E48DA /* DynamicRandomDots.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DynamicRandomDots.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* DynamicRandomDots-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DynamicRandomDots-Info.plist"; sourceTree = "<group>"; };
 		BFBFB0D510446C180019216B /* MWorksCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MWorksCore.framework; path = /Library/Frameworks/MWorksCore.framework; sourceTree = "<absolute>"; };
+		E162635A1403F774000F89CB /* MWLibrary.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = MWLibrary.xml; sourceTree = "<group>"; };
 		E1FCD4CE11DAB1AE0037E6FA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -101,6 +103,7 @@
 			children = (
 				5C78EE69115D02C700151A76 /* External Config */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
+				E16263591403F73F000F89CB /* Editor Definitions */,
 				32C88E010371C26100C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
@@ -177,6 +180,14 @@
 			name = "External Config";
 			sourceTree = "<group>";
 		};
+		E16263591403F73F000F89CB /* Editor Definitions */ = {
+			isa = PBXGroup;
+			children = (
+				E162635A1403F774000F89CB /* MWLibrary.xml */,
+			);
+			name = "Editor Definitions";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -232,6 +243,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E162635B1403F774000F89CB /* MWLibrary.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

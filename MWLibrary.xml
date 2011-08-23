@@ -1,0 +1,29 @@
+<MWElements>
+  <MWElement name="Dynamic Random Dots">
+    <match_signature>stimulus[@type="dynamic_random_dots"]</match_signature>
+    
+    <isa>Stimulus</isa>
+    
+    <description>
+      A dynamic random dots stimulus.
+    </description>
+    
+    <!-- Payload -->
+    <code>
+      <stimulus type="dynamic_random_dots"
+                tag="Dynamic Random Dots"
+                field_radius=""
+                field_center_x=""
+                field_center_y=""
+                num_dots=""
+                dot_size=""
+                color="1.0,1.0,1.0"
+                alpha_multiplier="1.0"
+                direction=""
+                speed=""
+                announce_dots="0"
+                autoplay="1"
+                />
+    </code>
+  </MWElement>
+</MWElements>

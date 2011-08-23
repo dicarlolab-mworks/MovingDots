@@ -15,7 +15,7 @@
     <sounds tag="Sounds"></sounds>
     <stimuli tag="Stimuli">
         <stimulus tag="background" full_name="background" type="blank_screen" color="0.5, 0.5, 0.5"></stimulus>
-        <stimulus type="dynamic_random_dots" tag="dots" field_radius="field_radius" field_center_x="field_center_x" field_center_y="field_center_y" num_dots="num_dots" dot_size="dot_size" color="1.0,1.0,1.0" alpha_multiplier="1.0" direction="direction" speed="speed" announce_dots="announce_dots"></stimulus>
+        <stimulus type="dynamic_random_dots" tag="dots" field_radius="field_radius" field_center_x="field_center_x" field_center_y="field_center_y" num_dots="num_dots" dot_size="dot_size" color="1.0,1.0,1.0" alpha_multiplier="1.0" direction="direction" speed="speed" announce_dots="announce_dots" autoplay="1"></stimulus>
     </stimuli>
     <filters tag="Filters"></filters>
     <optimizers tag="Optimizers"></optimizers>

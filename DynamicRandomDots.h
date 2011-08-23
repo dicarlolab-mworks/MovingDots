@@ -26,8 +26,11 @@ public:
     virtual ~DynamicRandomDots() { }
     
     virtual void load(shared_ptr<StimulusDisplay> display);
-    virtual void draw(shared_ptr<StimulusDisplay> display);
+    virtual void drawFrame(shared_ptr<StimulusDisplay> display);
     virtual Datum getCurrentAnnounceDrawData();
+   
+protected:
+    virtual void stopPlaying();
     
 private:
     void validateParameters();
