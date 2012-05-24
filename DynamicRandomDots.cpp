@@ -158,7 +158,7 @@ void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     // If we're drawing to the main display, update dot positions
     if (display->getCurrentContextIndex() == 0) {
         currentTime = getElapsedTime();
-        if (previousTime != -1) {
+        if ((previousTime != -1) && (previousTime != currentTime)) {
             updateDots();
         }
         previousTime = currentTime;

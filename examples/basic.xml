@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" standalone="no"?>
 <monkeyml version="1.0">
     <io_devices tag="IO Devices"></io_devices>
     <variables tag="Variables">
@@ -10,6 +10,14 @@
         <variable tag="direction" scope="global" logging="when_changed" default_value="45" type="float"></variable>
         <variable tag="speed" scope="global" logging="when_changed" default_value="2" type="float"></variable>
         <variable tag="stop" scope="global" logging="when_changed" default_value="0" type="boolean"></variable>
+        <variable tag="pause" scope="global" logging="when_changed" default_value="0" type="boolean">
+            <action type="if" tag="If true" condition="pause">
+                <action tag="Pause dynamic stimulus" type="pause_dynamic_stimulus" stimulus="dots"></action>
+            </action>
+            <action type="if" tag="If false" condition="!pause">
+                <action tag="Unpause dynamic stimulus" type="unpause_dynamic_stimulus" stimulus="dots"></action>
+            </action>
+        </variable>
         <variable tag="announce_dots" scope="global" logging="when_changed" default_value="0" type="boolean"></variable>
     </variables>
     <sounds tag="Sounds"></sounds>
@@ -26,6 +34,7 @@
                     <action_marker _unmoveable="1" tag="Actions"></action_marker>
                     <action type="report" tag="Announce Begin State System" message="State system beginning"></action>
                     <action type="assignment" tag="Assign Variable" variable="stop" value="0"></action>
+                    <action type="assignment" tag="Assign Variable 2" variable="pause" value="0"></action>
                     <action tag="Queue background" type="queue_stimulus" stimulus="background"></action>
                     <action tag="Queue dots" type="queue_stimulus" stimulus="dots"></action>
                     <action tag="Update display" type="update_stimulus_display"></action>
