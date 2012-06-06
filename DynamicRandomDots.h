@@ -22,6 +22,17 @@ using namespace mw;
 class DynamicRandomDots : public StandardDynamicStimulus {
 
 public:
+    static const std::string FIELD_RADIUS;
+    static const std::string FIELD_CENTER_X;
+    static const std::string FIELD_CENTER_Y;
+    static const std::string NUM_DOTS;
+    static const std::string DOT_SIZE;
+    static const std::string COLOR;
+    static const std::string ALPHA_MULTIPLIER;
+    static const std::string DIRECTION;
+    static const std::string SPEED;
+    static const std::string ANNOUNCE_DOTS;
+    
     static void describeComponent(ComponentInfo &info);
 
     explicit DynamicRandomDots(const ParameterValueMap &parameters);

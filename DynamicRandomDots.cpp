@@ -12,16 +12,16 @@
 #include <MWorksCore/ParsedColorTrio.h>
 
 
-static const std::string FIELD_RADIUS("field_radius");
-static const std::string FIELD_CENTER_X("field_center_x");
-static const std::string FIELD_CENTER_Y("field_center_y");
-static const std::string NUM_DOTS("num_dots");
-static const std::string DOT_SIZE("dot_size");
-static const std::string COLOR("color");
-static const std::string ALPHA_MULTIPLIER("alpha_multiplier");
-static const std::string DIRECTION("direction");
-static const std::string SPEED("speed");
-static const std::string ANNOUNCE_DOTS("announce_dots");
+const std::string DynamicRandomDots::FIELD_RADIUS("field_radius");
+const std::string DynamicRandomDots::FIELD_CENTER_X("field_center_x");
+const std::string DynamicRandomDots::FIELD_CENTER_Y("field_center_y");
+const std::string DynamicRandomDots::NUM_DOTS("num_dots");
+const std::string DynamicRandomDots::DOT_SIZE("dot_size");
+const std::string DynamicRandomDots::COLOR("color");
+const std::string DynamicRandomDots::ALPHA_MULTIPLIER("alpha_multiplier");
+const std::string DynamicRandomDots::DIRECTION("direction");
+const std::string DynamicRandomDots::SPEED("speed");
+const std::string DynamicRandomDots::ANNOUNCE_DOTS("announce_dots");
 
 
 void DynamicRandomDots::describeComponent(ComponentInfo &info) {
