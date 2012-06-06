@@ -25,7 +25,7 @@ public:
     static const std::string FIELD_RADIUS;
     static const std::string FIELD_CENTER_X;
     static const std::string FIELD_CENTER_Y;
-    static const std::string NUM_DOTS;
+    static const std::string DOT_DENSITY;
     static const std::string DOT_SIZE;
     static const std::string COLOR;
     static const std::string ALPHA_MULTIPLIER;
@@ -60,7 +60,7 @@ private:
     
     const GLfloat fieldRadius;
     const GLfloat fieldCenterX, fieldCenterY;
-    const GLint numDots;
+    const GLfloat dotDensity;
     const GLfloat dotSize;
     const mw::RGBColor color;
     const GLfloat alpha;
@@ -68,6 +68,7 @@ private:
     shared_ptr<Variable> speed;
     shared_ptr<Variable> announceDots;
     
+    GLint numDots;
     static const GLint verticesPerDot = 2;
     std::vector<GLfloat> dots;
     std::vector<GLfloat> dotSizeInPixels;

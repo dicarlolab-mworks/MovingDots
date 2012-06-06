@@ -9,13 +9,15 @@
 
 #include "DynamicRandomDots.h"
 
+#include <boost/math/special_functions/round.hpp>
+
 #include <MWorksCore/ParsedColorTrio.h>
 
 
 const std::string DynamicRandomDots::FIELD_RADIUS("field_radius");
 const std::string DynamicRandomDots::FIELD_CENTER_X("field_center_x");
 const std::string DynamicRandomDots::FIELD_CENTER_Y("field_center_y");
-const std::string DynamicRandomDots::NUM_DOTS("num_dots");
+const std::string DynamicRandomDots::DOT_DENSITY("dot_density");
 const std::string DynamicRandomDots::DOT_SIZE("dot_size");
 const std::string DynamicRandomDots::COLOR("color");
 const std::string DynamicRandomDots::ALPHA_MULTIPLIER("alpha_multiplier");
@@ -34,7 +36,7 @@ void DynamicRandomDots::describeComponent(ComponentInfo &info) {
     info.addParameter(FIELD_RADIUS);
     info.addParameter(FIELD_CENTER_X);
     info.addParameter(FIELD_CENTER_Y);
-    info.addParameter(NUM_DOTS);
+    info.addParameter(DOT_DENSITY);
     info.addParameter(DOT_SIZE);
     info.addParameter(COLOR, "1.0,1.0,1.0");
     info.addParameter(ALPHA_MULTIPLIER, "1.0");
@@ -49,7 +51,7 @@ DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
     fieldRadius(parameters[FIELD_RADIUS]),
     fieldCenterX(parameters[FIELD_CENTER_X]),
     fieldCenterY(parameters[FIELD_CENTER_Y]),
-    numDots(parameters[NUM_DOTS]),
+    dotDensity(parameters[DOT_DENSITY]),
     dotSize(parameters[DOT_SIZE]),
     color(parameters[COLOR]),
     alpha(parameters[ALPHA_MULTIPLIER]),
@@ -78,8 +80,13 @@ void DynamicRandomDots::validateParameters() {
         throw SimpleException("field radius must be greater than 0");
     }
 
+    if (dotDensity <= 0.0f) {
+        throw SimpleException("dot density must be greater than 0");
+    }
+    
+    numDots = GLint(boost::math::round(dotDensity * (M_PI * fieldRadius * fieldRadius)));
     if (numDots < 1) {
-        throw SimpleException("number of dots must be greater than or equal to 1");
+        throw SimpleException("field radius and dot density yield 0 dots");
     }
     
     if (dotSize <= 0.0f) {
@@ -195,7 +202,7 @@ Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
     announceData.addElement(FIELD_RADIUS, fieldRadius);
     announceData.addElement(FIELD_CENTER_X, fieldCenterX);
     announceData.addElement(FIELD_CENTER_Y, fieldCenterY);
-    announceData.addElement(NUM_DOTS, (long)numDots);
+    announceData.addElement(DOT_DENSITY, dotDensity);
     announceData.addElement(DOT_SIZE, dotSize);
     announceData.addElement(STIM_COLOR_R, color.red);
     announceData.addElement(STIM_COLOR_G, color.green);
@@ -203,6 +210,7 @@ Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
     announceData.addElement(ALPHA_MULTIPLIER, alpha);
     announceData.addElement(DIRECTION, direction->getValue().getFloat());
     announceData.addElement(SPEED, speed->getValue().getFloat());
+    announceData.addElement("num_dots", (long)numDots);
     
     if (announceDots->getValue().getBool()) {
         Datum dotsData;
