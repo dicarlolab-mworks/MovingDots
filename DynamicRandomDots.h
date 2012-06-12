@@ -31,6 +31,7 @@ public:
     static const std::string ALPHA_MULTIPLIER;
     static const std::string DIRECTION;
     static const std::string SPEED;
+    static const std::string COHERENCE;
     static const std::string ANNOUNCE_DOTS;
     
     static void describeComponent(ComponentInfo &info);
@@ -58,20 +59,34 @@ private:
         return randVar();
     }
     
+    GLfloat& getX(GLint i) { return dotPositions[i*verticesPerDot]; }
+    GLfloat& getY(GLint i) { return dotPositions[i*verticesPerDot + 1]; }
+    GLfloat& getDirection(GLint i) { return dotDirections[i]; }
+    
+    GLfloat newDirection() {
+        if ((coherence == 0.0f) || ((coherence != 1.0f) && (rand(0.0f, 1.0f) > coherence))) {
+            return rand(0.0f, 360.0f);
+        }
+        return direction;
+    }
+    
     const GLfloat fieldRadius;
     const GLfloat fieldCenterX, fieldCenterY;
     const GLfloat dotDensity;
     const GLfloat dotSize;
     const mw::RGBColor color;
     const GLfloat alpha;
-    shared_ptr<Variable> direction;
+    const GLfloat directionInDegrees;
+    const GLfloat direction;
     shared_ptr<Variable> speed;
+    const GLfloat coherence;
     shared_ptr<Variable> announceDots;
     
+    std::vector<GLfloat> dotSizeInPixels;
     GLint numDots;
     static const GLint verticesPerDot = 2;
-    std::vector<GLfloat> dots;
-    std::vector<GLfloat> dotSizeInPixels;
+    std::vector<GLfloat> dotPositions;
+    std::vector<GLfloat> dotDirections;
 
     boost::mt19937 randGen;
     

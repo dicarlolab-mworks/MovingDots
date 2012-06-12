@@ -9,6 +9,7 @@
         <variable tag="dot_size" scope="global" logging="when_changed" default_value="0.2" type="float"></variable>
         <variable tag="direction" scope="global" logging="when_changed" default_value="45" type="float"></variable>
         <variable tag="speed" scope="global" logging="when_changed" default_value="2" type="float"></variable>
+        <variable tag="coherence" scope="global" logging="when_changed" default_value="0.9" type="float"></variable>
         <variable tag="stop" scope="global" logging="when_changed" default_value="0" type="boolean"></variable>
         <variable tag="pause" scope="global" logging="when_changed" default_value="0" type="boolean">
             <action type="if" tag="If true" condition="pause">
@@ -23,7 +24,7 @@
     <sounds tag="Sounds"></sounds>
     <stimuli tag="Stimuli">
         <stimulus tag="background" full_name="background" type="blank_screen" color="0.5, 0.5, 0.5"></stimulus>
-        <stimulus type="dynamic_random_dots" tag="dots" field_radius="field_radius" field_center_x="field_center_x" field_center_y="field_center_y" dot_density="dot_density" dot_size="dot_size" color="1.0,1.0,1.0" alpha_multiplier="1.0" direction="direction" speed="speed" announce_dots="announce_dots" autoplay="1"></stimulus>
+        <stimulus type="dynamic_random_dots" tag="dots" field_radius="field_radius" field_center_x="field_center_x" field_center_y="field_center_y" dot_density="dot_density" dot_size="dot_size" color="1.0,1.0,1.0" alpha_multiplier="1.0" direction="direction" speed="speed" coherence="coherence" announce_dots="announce_dots" autoplay="1"></stimulus>
     </stimuli>
     <filters tag="Filters"></filters>
     <optimizers tag="Optimizers"></optimizers>

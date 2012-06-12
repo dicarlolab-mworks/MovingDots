@@ -23,6 +23,7 @@ const std::string DynamicRandomDots::COLOR("color");
 const std::string DynamicRandomDots::ALPHA_MULTIPLIER("alpha_multiplier");
 const std::string DynamicRandomDots::DIRECTION("direction");
 const std::string DynamicRandomDots::SPEED("speed");
+const std::string DynamicRandomDots::COHERENCE("coherence");
 const std::string DynamicRandomDots::ANNOUNCE_DOTS("announce_dots");
 
 
@@ -42,6 +43,7 @@ void DynamicRandomDots::describeComponent(ComponentInfo &info) {
     info.addParameter(ALPHA_MULTIPLIER, "1.0");
     info.addParameter(DIRECTION);
     info.addParameter(SPEED);
+    info.addParameter(COHERENCE, "1.0");
     info.addParameter(ANNOUNCE_DOTS, "0");
 }
 
@@ -55,8 +57,10 @@ DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
     dotSize(parameters[DOT_SIZE]),
     color(parameters[COLOR]),
     alpha(parameters[ALPHA_MULTIPLIER]),
-    direction(parameters[DIRECTION]),
+    directionInDegrees(parameters[DIRECTION]),
+    direction(directionInDegrees / 180.0f * M_PI),  // Degrees to radians
     speed(parameters[SPEED]),
+    coherence(parameters[COHERENCE]),
     announceDots(parameters[ANNOUNCE_DOTS]),
     previousTime(-1),
     currentTime(-1)
@@ -92,6 +96,10 @@ void DynamicRandomDots::validateParameters() {
     if (dotSize <= 0.0f) {
         throw SimpleException("dot size must be greater than 0");
     }
+    
+    if ((coherence < 0.0f) || (coherence > 1.0f)) {
+        throw SimpleException("coherence must be between 0 and 1");
+    }
 }
 
 
@@ -112,11 +120,13 @@ void DynamicRandomDots::computeDotSizeInPixels(shared_ptr<StimulusDisplay> displ
 
 
 void DynamicRandomDots::initializeDots() {
-    dots.resize(numDots * verticesPerDot);
+    dotPositions.resize(numDots * verticesPerDot);
+    dotDirections.resize(numDots);
 
-    for (GLint i = 0; i < (numDots * verticesPerDot); i += verticesPerDot) {
-        GLfloat &x = dots[i];
-        GLfloat &y = dots[i+1];
+    for (GLint i = 0; i < numDots; i++) {
+        GLfloat &x = getX(i);
+        GLfloat &y = getY(i);
+        GLfloat &theta = getDirection(i);
 
         do {
             x = rand(-fieldRadius, fieldRadius);
@@ -125,6 +135,8 @@ void DynamicRandomDots::initializeDots() {
 
         x += fieldCenterX;
         y += fieldCenterY;
+        
+        theta = newDirection();
     }
 }
 
@@ -132,22 +144,21 @@ void DynamicRandomDots::initializeDots() {
 void DynamicRandomDots::updateDots() {
     const GLfloat dt = (GLfloat)(currentTime - previousTime) / 1.0e6f;
     const GLfloat dr = dt * speed->getValue().getFloat();
-    const GLfloat theta = direction->getValue().getFloat() / 180.0f * M_PI;  // Degrees to radians
-    
-    const GLfloat dx = dr * cos(theta);
-    const GLfloat dy = dr * sin(theta);
 
-    for (GLint i = 0; i < (numDots * verticesPerDot); i += verticesPerDot) {
-        GLfloat &x = dots[i];
-        GLfloat &y = dots[i+1];
+    for (GLint i = 0; i < numDots; i++) {
+        GLfloat &x = getX(i);
+        GLfloat &y = getY(i);
+        GLfloat &theta = getDirection(i);
         
-        x += dx;
-        y += dy;
+        x += dr * cos(theta);
+        y += dr * sin(theta);
         
         GLfloat x1 = x - fieldCenterX;
         GLfloat y1 = y - fieldCenterY;
 
         if (x1*x1 + y1*y1 > fieldRadius*fieldRadius) {
+            theta = newDirection();
+            
             y1 = rand(-fieldRadius, fieldRadius);
             x1 = -sqrt(fieldRadius*fieldRadius - y1*y1) + rand(0.0f, dr);
             
@@ -183,7 +194,7 @@ void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     glEnableClientState(GL_VERTEX_ARRAY);
 
     glPointSize(dotSizeInPixels[display->getCurrentContextIndex()]);
-    glVertexPointer(verticesPerDot, GL_FLOAT, 0, &(dots[0]));
+    glVertexPointer(verticesPerDot, GL_FLOAT, 0, &(dotPositions[0]));
     glDrawArrays(GL_POINTS, 0, numDots);
 
     glDisableClientState(GL_VERTEX_ARRAY);
@@ -208,13 +219,13 @@ Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
     announceData.addElement(STIM_COLOR_G, color.green);
     announceData.addElement(STIM_COLOR_B, color.blue);
     announceData.addElement(ALPHA_MULTIPLIER, alpha);
-    announceData.addElement(DIRECTION, direction->getValue().getFloat());
+    announceData.addElement(DIRECTION, directionInDegrees);
     announceData.addElement(SPEED, speed->getValue().getFloat());
     announceData.addElement("num_dots", (long)numDots);
     
     if (announceDots->getValue().getBool()) {
         Datum dotsData;
-        dotsData.setString((char*)(&(dots[0])), dots.size() * sizeof(GLfloat));
+        dotsData.setString((char*)(&(dotPositions[0])), dotPositions.size() * sizeof(GLfloat));
         announceData.addElement("dots", dotsData);
     }
     
