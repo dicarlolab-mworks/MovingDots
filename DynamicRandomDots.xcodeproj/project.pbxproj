@@ -115,8 +115,8 @@
 		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
-				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
+				BFBFB0D510446C180019216B /* MWorksCore.framework */,
+				E1FCD4CE11DAB1AE0037E6FA /* OpenGL.framework */,
 			);
 			name = "Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -137,22 +137,6 @@
 				5CF9AEB90FD5795C00F405F6 /* DynamicRandomDotsPlugin.cpp */,
 			);
 			name = Classes;
-			sourceTree = "<group>";
-		};
-		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				BFBFB0D510446C180019216B /* MWorksCore.framework */,
-				E1FCD4CE11DAB1AE0037E6FA /* OpenGL.framework */,
-			);
-			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 		19C28FB8FE9D52D311CA2CBB /* Products */ = {
@@ -281,7 +265,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = DynamicRandomDots_Prefix.pch;
 				INFOPLIST_FILE = "DynamicRandomDots-Info.plist";
-				INSTALL_PATH = "$(PLUGINS_DIR)";
 				PRODUCT_NAME = DynamicRandomDots;
 				WRAPPER_EXTENSION = bundle;
 			};
