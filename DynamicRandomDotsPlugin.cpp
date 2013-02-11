@@ -22,6 +22,7 @@ class DynamicRandomDotsPlugin : public Plugin {
 };
 
 
+MW_SYMBOL_PUBLIC
 extern "C" Plugin* getPlugin() {
     return new DynamicRandomDotsPlugin();
 }
