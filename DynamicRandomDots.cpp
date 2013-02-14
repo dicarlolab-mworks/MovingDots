@@ -112,7 +112,7 @@ void DynamicRandomDots::computeDotSizeInPixels(shared_ptr<StimulusDisplay> displ
     display->getDisplayBounds(xMin, xMax, yMin, yMax);
     
     for (int i = 0; i < display->getNContexts(); i++) {
-        display->setCurrent(i);
+        OpenGLContextLock ctxLock = display->setCurrent(i);
         display->getCurrentViewportSize(width, height);
         dotSizeInPixels.push_back(dotSize / (xMax - xMin) * (GLfloat)width);
     }
