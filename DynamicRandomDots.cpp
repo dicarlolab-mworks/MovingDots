@@ -9,6 +9,9 @@
 
 #include "DynamicRandomDots.h"
 
+#include <algorithm>
+#include <cmath>
+
 #include <boost/math/special_functions/round.hpp>
 
 #include <MWorksCore/ParsedColorTrio.h>
@@ -24,6 +27,7 @@ const std::string DynamicRandomDots::ALPHA_MULTIPLIER("alpha_multiplier");
 const std::string DynamicRandomDots::DIRECTION("direction");
 const std::string DynamicRandomDots::SPEED("speed");
 const std::string DynamicRandomDots::COHERENCE("coherence");
+const std::string DynamicRandomDots::LIFETIME("lifetime");
 const std::string DynamicRandomDots::ANNOUNCE_DOTS("announce_dots");
 
 
@@ -44,6 +48,7 @@ void DynamicRandomDots::describeComponent(ComponentInfo &info) {
     info.addParameter(DIRECTION);
     info.addParameter(SPEED);
     info.addParameter(COHERENCE, "1.0");
+    info.addParameter(LIFETIME, "0.0");
     info.addParameter(ANNOUNCE_DOTS, "0");
 }
 
@@ -61,6 +66,7 @@ DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
     direction(directionInDegrees / 180.0f * M_PI),  // Degrees to radians
     speed(parameters[SPEED]),
     coherence(parameters[COHERENCE]),
+    lifetime(std::max(0.0f, GLfloat(parameters[LIFETIME]))),
     announceDots(parameters[ANNOUNCE_DOTS]),
     previousTime(-1),
     currentTime(-1)
@@ -122,21 +128,10 @@ void DynamicRandomDots::computeDotSizeInPixels(shared_ptr<StimulusDisplay> displ
 void DynamicRandomDots::initializeDots() {
     dotPositions.resize(numDots * verticesPerDot);
     dotDirections.resize(numDots);
+    dotAges.resize(numDots);
 
     for (GLint i = 0; i < numDots; i++) {
-        GLfloat &x = getX(i);
-        GLfloat &y = getY(i);
-        GLfloat &theta = getDirection(i);
-
-        do {
-            x = rand(-fieldRadius, fieldRadius);
-            y = rand(-fieldRadius, fieldRadius);
-        } while (x*x + y*y > fieldRadius*fieldRadius);
-
-        x += fieldCenterX;
-        y += fieldCenterY;
-        
-        theta = newDirection();
+        replaceDot(i, newAge());
     }
 }
 
@@ -146,28 +141,59 @@ void DynamicRandomDots::updateDots() {
     const GLfloat dr = dt * speed->getValue().getFloat();
 
     for (GLint i = 0; i < numDots; i++) {
-        GLfloat &x = getX(i);
-        GLfloat &y = getY(i);
-        GLfloat &theta = getDirection(i);
+        GLfloat &age = getAge(i);
+        age += dt;
         
-        x += dr * cos(theta);
-        y += dr * sin(theta);
-        
-        GLfloat x1 = x - fieldCenterX;
-        GLfloat y1 = y - fieldCenterY;
-
-        if (x1*x1 + y1*y1 > fieldRadius*fieldRadius) {
-            theta = newDirection();
-            
-            y1 = rand(-fieldRadius, fieldRadius);
-            x1 = -sqrt(fieldRadius*fieldRadius - y1*y1) + rand(0.0f, dr);
-            
-            x = x1*cos(theta) - y1*sin(theta);
-            y = x1*sin(theta) + y1*cos(theta);
-            
-            x += fieldCenterX;
-            y += fieldCenterY;
+        if ((age <= lifetime) || (lifetime == 0.0f)) {
+            advanceDot(i, dt, dr);
+        } else {
+            replaceDot(i, 0.0f);
         }
+    }
+}
+
+
+void DynamicRandomDots::replaceDot(GLint i, GLfloat age) {
+    GLfloat &x = getX(i);
+    GLfloat &y = getY(i);
+    
+    do {
+        x = rand(-fieldRadius, fieldRadius);
+        y = rand(-fieldRadius, fieldRadius);
+    } while (x*x + y*y > fieldRadius*fieldRadius);
+    
+    x += fieldCenterX;
+    y += fieldCenterY;
+    
+    getDirection(i) = newDirection();
+    getAge(i) = age;
+}
+
+
+void DynamicRandomDots::advanceDot(GLint i, GLfloat dt, GLfloat dr) {
+    GLfloat &x = getX(i);
+    GLfloat &y = getY(i);
+    GLfloat &theta = getDirection(i);
+    
+    x += dr * std::cos(theta);
+    y += dr * std::sin(theta);
+    
+    GLfloat x1 = x - fieldCenterX;
+    GLfloat y1 = y - fieldCenterY;
+    
+    if (x1*x1 + y1*y1 > fieldRadius*fieldRadius) {
+        theta = newDirection();
+        
+        y1 = rand(-fieldRadius, fieldRadius);
+        x1 = -sqrt(fieldRadius*fieldRadius - y1*y1) + rand(0.0f, dr);
+        
+        x = x1*std::cos(theta) - y1*std::sin(theta);
+        y = x1*std::sin(theta) + y1*std::cos(theta);
+        
+        x += fieldCenterX;
+        y += fieldCenterY;
+        
+        getAge(i) = newAge();
     }
 }
 
@@ -221,11 +247,13 @@ Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
     announceData.addElement(ALPHA_MULTIPLIER, alpha);
     announceData.addElement(DIRECTION, directionInDegrees);
     announceData.addElement(SPEED, speed->getValue().getFloat());
-    announceData.addElement("num_dots", (long)numDots);
+    announceData.addElement(COHERENCE, coherence);
+    announceData.addElement(LIFETIME, lifetime);
+    announceData.addElement("num_dots", long(numDots));
     
     if (announceDots->getValue().getBool()) {
         Datum dotsData;
-        dotsData.setString((char*)(&(dotPositions[0])), dotPositions.size() * sizeof(GLfloat));
+        dotsData.setString(reinterpret_cast<char *>(&(dotPositions[0])), dotPositions.size() * sizeof(GLfloat));
         announceData.addElement("dots", dotsData);
     }
     

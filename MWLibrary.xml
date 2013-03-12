@@ -21,7 +21,8 @@
                 alpha_multiplier="1.0"
                 direction=""
                 speed=""
-                coherence="0.9"
+                coherence="1.0"
+                lifetime="0.0"
                 announce_dots="0"
                 autoplay="1"
                 />

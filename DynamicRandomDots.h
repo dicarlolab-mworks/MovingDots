@@ -32,6 +32,7 @@ public:
     static const std::string DIRECTION;
     static const std::string SPEED;
     static const std::string COHERENCE;
+    static const std::string LIFETIME;
     static const std::string ANNOUNCE_DOTS;
     
     static void describeComponent(ComponentInfo &info);
@@ -51,6 +52,8 @@ private:
     void computeDotSizeInPixels(shared_ptr<StimulusDisplay> display);
     void initializeDots();
     void updateDots();
+    void replaceDot(GLint i, GLfloat age);
+    void advanceDot(GLint i, GLfloat dt, GLfloat dr);
     
     template<typename RealType>
     RealType rand(RealType min, RealType max) {
@@ -62,12 +65,20 @@ private:
     GLfloat& getX(GLint i) { return dotPositions[i*verticesPerDot]; }
     GLfloat& getY(GLint i) { return dotPositions[i*verticesPerDot + 1]; }
     GLfloat& getDirection(GLint i) { return dotDirections[i]; }
+    GLfloat& getAge(GLint i) { return dotAges[i]; }
     
     GLfloat newDirection() {
         if ((coherence == 0.0f) || ((coherence != 1.0f) && (rand(0.0f, 1.0f) > coherence))) {
             return rand(0.0f, 360.0f);
         }
         return direction;
+    }
+    
+    GLfloat newAge() {
+        if (lifetime != 0.0f) {
+            return rand(0.0f, lifetime);
+        }
+        return 0.0f;
     }
     
     const GLfloat fieldRadius;
@@ -80,6 +91,7 @@ private:
     const GLfloat direction;
     shared_ptr<Variable> speed;
     const GLfloat coherence;
+    const GLfloat lifetime;
     shared_ptr<Variable> announceDots;
     
     std::vector<GLfloat> dotSizeInPixels;
@@ -87,6 +99,7 @@ private:
     static const GLint verticesPerDot = 2;
     std::vector<GLfloat> dotPositions;
     std::vector<GLfloat> dotDirections;
+    std::vector<GLfloat> dotAges;
 
     boost::mt19937 randGen;
     
