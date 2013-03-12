@@ -14,8 +14,6 @@
 
 #include <boost/math/special_functions/round.hpp>
 
-#include <MWorksCore/ParsedColorTrio.h>
-
 
 const std::string DynamicRandomDots::FIELD_RADIUS("field_radius");
 const std::string DynamicRandomDots::FIELD_CENTER_X("field_center_x");
@@ -68,6 +66,7 @@ DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
     coherence(parameters[COHERENCE]),
     lifetime(std::max(0.0f, GLfloat(parameters[LIFETIME]))),
     announceDots(parameters[ANNOUNCE_DOTS]),
+    numDots(GLint(boost::math::round(dotDensity * (M_PI * fieldRadius * fieldRadius)))),
     previousTime(-1),
     currentTime(-1)
 { }
@@ -85,7 +84,7 @@ void DynamicRandomDots::load(shared_ptr<StimulusDisplay> display) {
 }
 
 
-void DynamicRandomDots::validateParameters() {
+void DynamicRandomDots::validateParameters() const {
     if (fieldRadius <= 0.0f) {
         throw SimpleException("field radius must be greater than 0");
     }
@@ -94,7 +93,6 @@ void DynamicRandomDots::validateParameters() {
         throw SimpleException("dot density must be greater than 0");
     }
     
-    numDots = GLint(boost::math::round(dotDensity * (M_PI * fieldRadius * fieldRadius)));
     if (numDots < 1) {
         throw SimpleException("field radius and dot density yield 0 dots");
     }
@@ -120,7 +118,7 @@ void DynamicRandomDots::computeDotSizeInPixels(shared_ptr<StimulusDisplay> displ
     for (int i = 0; i < display->getNContexts(); i++) {
         OpenGLContextLock ctxLock = display->setCurrent(i);
         display->getCurrentViewportSize(width, height);
-        dotSizeInPixels.push_back(dotSize / (xMax - xMin) * (GLfloat)width);
+        dotSizeInPixels.push_back(GLdouble(dotSize) / (xMax - xMin) * GLdouble(width));
     }
 }
 
@@ -137,7 +135,7 @@ void DynamicRandomDots::initializeDots() {
 
 
 void DynamicRandomDots::updateDots() {
-    const GLfloat dt = (GLfloat)(currentTime - previousTime) / 1.0e6f;
+    const GLfloat dt = GLfloat(currentTime - previousTime) / 1.0e6f;
     const GLfloat dr = dt * speed->getValue().getFloat();
 
     for (GLint i = 0; i < numDots; i++) {
@@ -185,7 +183,7 @@ void DynamicRandomDots::advanceDot(GLint i, GLfloat dt, GLfloat dr) {
         theta = newDirection();
         
         y1 = rand(-fieldRadius, fieldRadius);
-        x1 = -sqrt(fieldRadius*fieldRadius - y1*y1) + rand(0.0f, dr);
+        x1 = -std::sqrt(fieldRadius*fieldRadius - y1*y1) + rand(0.0f, dr);
         
         x = x1*std::cos(theta) - y1*std::sin(theta);
         y = x1*std::sin(theta) + y1*std::cos(theta);
@@ -252,8 +250,7 @@ Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
     announceData.addElement("num_dots", long(numDots));
     
     if (announceDots->getValue().getBool()) {
-        Datum dotsData;
-        dotsData.setString(reinterpret_cast<char *>(&(dotPositions[0])), dotPositions.size() * sizeof(GLfloat));
+        Datum dotsData(reinterpret_cast<char *>(&(dotPositions[0])), dotPositions.size() * sizeof(GLfloat));
         announceData.addElement("dots", dotsData);
     }
     

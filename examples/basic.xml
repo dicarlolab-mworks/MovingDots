@@ -10,21 +10,14 @@
         <variable tag="direction" scope="global" logging="when_changed" default_value="45" type="float"></variable>
         <variable tag="speed" scope="global" logging="when_changed" default_value="2" type="float"></variable>
         <variable tag="coherence" scope="global" logging="when_changed" default_value="0.9" type="float"></variable>
+        <variable tag="lifetime" scope="global" logging="when_changed" default_value="2.0" type="float"></variable>
         <variable tag="stop" scope="global" logging="when_changed" default_value="0" type="boolean"></variable>
-        <variable tag="pause" scope="global" logging="when_changed" default_value="0" type="boolean">
-            <action type="if" tag="If true" condition="pause">
-                <action tag="Pause dynamic stimulus" type="pause_dynamic_stimulus" stimulus="dots"></action>
-            </action>
-            <action type="if" tag="If false" condition="!pause">
-                <action tag="Unpause dynamic stimulus" type="unpause_dynamic_stimulus" stimulus="dots"></action>
-            </action>
-        </variable>
         <variable tag="announce_dots" scope="global" logging="when_changed" default_value="0" type="boolean"></variable>
     </variables>
     <sounds tag="Sounds"></sounds>
     <stimuli tag="Stimuli">
         <stimulus tag="background" full_name="background" type="blank_screen" color="0.5, 0.5, 0.5"></stimulus>
-        <stimulus type="dynamic_random_dots" tag="dots" field_radius="field_radius" field_center_x="field_center_x" field_center_y="field_center_y" dot_density="dot_density" dot_size="dot_size" color="1.0,1.0,1.0" alpha_multiplier="1.0" direction="direction" speed="speed" coherence="coherence" announce_dots="announce_dots" autoplay="1"></stimulus>
+        <stimulus type="dynamic_random_dots" tag="dots" field_radius="field_radius" field_center_x="field_center_x" field_center_y="field_center_y" dot_density="dot_density" dot_size="dot_size" color="1.0,1.0,1.0" alpha_multiplier="1.0" direction="direction" speed="speed" coherence="coherence" lifetime="lifetime" announce_dots="announce_dots" autoplay="1"></stimulus>
     </stimuli>
     <filters tag="Filters"></filters>
     <optimizers tag="Optimizers"></optimizers>
@@ -34,8 +27,7 @@
                 <task_system_state tag="Begin State System" interruptible="YES">
                     <action_marker _unmoveable="1" tag="Actions"></action_marker>
                     <action type="report" tag="Announce Begin State System" message="State system beginning"></action>
-                    <action type="assignment" tag="Assign Variable" variable="stop" value="0"></action>
-                    <action type="assignment" tag="Assign Variable 2" variable="pause" value="0"></action>
+                    <action type="assignment" tag="Reset stop" variable="stop" value="0"></action>
                     <action tag="Queue background" type="queue_stimulus" stimulus="background"></action>
                     <action tag="Queue dots" type="queue_stimulus" stimulus="dots"></action>
                     <action tag="Update display" type="update_stimulus_display"></action>

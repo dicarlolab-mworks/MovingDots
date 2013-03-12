@@ -14,8 +14,6 @@
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
 
-#include <MWorksCore/StandardDynamicStimulus.h>
-
 using namespace mw;
 
 
@@ -38,17 +36,17 @@ public:
     static void describeComponent(ComponentInfo &info);
 
     explicit DynamicRandomDots(const ParameterValueMap &parameters);
-    virtual ~DynamicRandomDots() { }
+    ~DynamicRandomDots() { }
     
-    virtual void load(shared_ptr<StimulusDisplay> display);
-    virtual void drawFrame(shared_ptr<StimulusDisplay> display);
-    virtual Datum getCurrentAnnounceDrawData();
+    void load(shared_ptr<StimulusDisplay> display) MW_OVERRIDE;
+    void drawFrame(shared_ptr<StimulusDisplay> display) MW_OVERRIDE;
+    Datum getCurrentAnnounceDrawData() MW_OVERRIDE;
    
 protected:
-    virtual void stopPlaying();
+    void stopPlaying() MW_OVERRIDE;
     
 private:
-    void validateParameters();
+    void validateParameters() const;
     void computeDotSizeInPixels(shared_ptr<StimulusDisplay> display);
     void initializeDots();
     void updateDots();
@@ -57,7 +55,7 @@ private:
     
     template<typename RealType>
     RealType rand(RealType min, RealType max) {
-        boost::uniform_real<RealType> randDist(min, max);
+        const boost::uniform_real<RealType> randDist(min, max);
         boost::variate_generator< boost::mt19937&, boost::uniform_real<RealType> > randVar(randGen, randDist);
         return randVar();
     }
