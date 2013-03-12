@@ -32,7 +32,7 @@
         <stimulus tag="background" full_name="background" type="blank_screen" color="0.5, 0.5, 0.5"></stimulus>
         <range_replicator tag="New Replicator" from="0" to="1" step="1" variable="i">
             <range_replicator tag="New Replicator 2" from="0" to="1" step="1" variable="j">
-                <stimulus type="dynamic_random_dots" tag="dots${i}${j}" field_radius="field_radius" field_center_x="field_center_x * pow(-1, ${i})" field_center_y="field_center_y * pow(-1, ${j})" dot_density="dot_density" dot_size="dot_size" color="color_r_${i}${j},color_g_${i}${j},color_b_${i}${j}" alpha_multiplier="1.0" direction="direction + 270*(int)(${i}==0 &amp;&amp; ${j}==1) + 90*(int)(${i}==1 &amp;&amp; ${j}==0) + 180*(int)(${i}==1 &amp;&amp; ${j}==1)" speed="speed" autoplay="1"></stimulus>
+                <stimulus type="moving_dots" tag="dots${i}${j}" field_radius="field_radius" field_center_x="field_center_x * pow(-1, ${i})" field_center_y="field_center_y * pow(-1, ${j})" dot_density="dot_density" dot_size="dot_size" color="color_r_${i}${j},color_g_${i}${j},color_b_${i}${j}" alpha_multiplier="1.0" direction="direction + 270*(int)(${i}==0 &amp;&amp; ${j}==1) + 90*(int)(${i}==1 &amp;&amp; ${j}==0) + 180*(int)(${i}==1 &amp;&amp; ${j}==1)" speed="speed" autoplay="1"></stimulus>
             </range_replicator>
         </range_replicator>
     </stimuli>

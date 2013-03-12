@@ -1,5 +1,2 @@
-DynamicRandomDots.xcodeproj/*.pbxuser
-DynamicRandomDots.xcodeproj/*.perspectivev3
-DynamicRandomDots.xcodeproj/project.xcworkspace/xcuserdata/
-DynamicRandomDots.xcodeproj/xcuserdata/
 build/
+xcuserdata/

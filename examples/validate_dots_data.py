@@ -9,7 +9,7 @@ def validate_dots_data(filename):
         for e in f.get_events_iter(codes=['#announceStimulus']):
             value = e.value
             if (isinstance(value, dict) and
-                (value['type'] == 'dynamic_random_dots') and
+                (value['type'] == 'moving_dots') and
                 ('dots' in value)):
                 data = numpy.fromstring(value['dots'], numpy.float32)
                 assert len(data) == (2 * value['num_dots'])

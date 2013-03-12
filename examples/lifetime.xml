@@ -25,7 +25,7 @@
         <range_replicator tag="New Replicator" from="0" to="1" step="1" variable="i">
             <range_replicator tag="New Replicator 2" from="0" to="1" step="1" variable="j">
                 <stimulus type="circle" tag="field${i}${j}" color="0,0,0" x_size="2*field_radius" y_size="2*field_radius" x_position="field_center_x * pow(-1, ${i})" y_position="field_center_y * pow(-1, ${j})" rotation="0" alpha_multiplier="1"></stimulus>
-                <stimulus type="dynamic_random_dots" tag="dots${i}${j}" field_radius="field_radius" field_center_x="field_center_x * pow(-1, ${i})" field_center_y="field_center_y * pow(-1, ${j})" dot_density="dot_density" dot_size="dot_size" color="1,1,1" alpha_multiplier="1.0" direction="direction" speed="speed" lifetime="lifetime_${i}${j}" autoplay="1"></stimulus>
+                <stimulus type="moving_dots" tag="dots${i}${j}" field_radius="field_radius" field_center_x="field_center_x * pow(-1, ${i})" field_center_y="field_center_y * pow(-1, ${j})" dot_density="dot_density" dot_size="dot_size" color="1,1,1" alpha_multiplier="1.0" direction="direction" speed="speed" lifetime="lifetime_${i}${j}" autoplay="1"></stimulus>
             </range_replicator>
         </range_replicator>
     </stimuli>

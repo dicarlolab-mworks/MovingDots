@@ -1,14 +1,14 @@
 /*
- *  DynamicRandomDots.h
- *  DynamicRandomDots
+ *  MovingDots.h
+ *  MovingDots
  *
  *  Created by Christopher Stawarz on 8/6/10.
  *  Copyright 2010 MIT. All rights reserved.
  *
  */
 
-#ifndef DynamicRandomDots_H_
-#define DynamicRandomDots_H_
+#ifndef MovingDots_H_
+#define MovingDots_H_
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_real.hpp>
@@ -17,7 +17,7 @@
 using namespace mw;
 
 
-class DynamicRandomDots : public StandardDynamicStimulus {
+class MovingDots : public StandardDynamicStimulus {
 
 public:
     static const std::string FIELD_RADIUS;
@@ -35,8 +35,8 @@ public:
     
     static void describeComponent(ComponentInfo &info);
 
-    explicit DynamicRandomDots(const ParameterValueMap &parameters);
-    ~DynamicRandomDots() { }
+    explicit MovingDots(const ParameterValueMap &parameters);
+    ~MovingDots() { }
     
     void load(shared_ptr<StimulusDisplay> display) MW_OVERRIDE;
     void drawFrame(shared_ptr<StimulusDisplay> display) MW_OVERRIDE;

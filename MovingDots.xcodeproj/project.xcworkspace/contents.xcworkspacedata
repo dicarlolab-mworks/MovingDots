@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:DynamicRandomDots.xcodeproj">
+      location = "self:MovingDots.xcodeproj">
    </FileRef>
 </Workspace>

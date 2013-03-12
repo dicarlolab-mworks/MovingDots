@@ -1,13 +1,13 @@
 /*
- *  DynamicRandomDots.cpp
- *  DynamicRandomDots
+ *  MovingDots.cpp
+ *  MovingDots
  *
  *  Created by Christopher Stawarz on 8/6/10.
  *  Copyright 2010 MIT. All rights reserved.
  *
  */
 
-#include "DynamicRandomDots.h"
+#include "MovingDots.h"
 
 #include <algorithm>
 #include <cmath>
@@ -15,26 +15,26 @@
 #include <boost/math/special_functions/round.hpp>
 
 
-const std::string DynamicRandomDots::FIELD_RADIUS("field_radius");
-const std::string DynamicRandomDots::FIELD_CENTER_X("field_center_x");
-const std::string DynamicRandomDots::FIELD_CENTER_Y("field_center_y");
-const std::string DynamicRandomDots::DOT_DENSITY("dot_density");
-const std::string DynamicRandomDots::DOT_SIZE("dot_size");
-const std::string DynamicRandomDots::COLOR("color");
-const std::string DynamicRandomDots::ALPHA_MULTIPLIER("alpha_multiplier");
-const std::string DynamicRandomDots::DIRECTION("direction");
-const std::string DynamicRandomDots::SPEED("speed");
-const std::string DynamicRandomDots::COHERENCE("coherence");
-const std::string DynamicRandomDots::LIFETIME("lifetime");
-const std::string DynamicRandomDots::ANNOUNCE_DOTS("announce_dots");
+const std::string MovingDots::FIELD_RADIUS("field_radius");
+const std::string MovingDots::FIELD_CENTER_X("field_center_x");
+const std::string MovingDots::FIELD_CENTER_Y("field_center_y");
+const std::string MovingDots::DOT_DENSITY("dot_density");
+const std::string MovingDots::DOT_SIZE("dot_size");
+const std::string MovingDots::COLOR("color");
+const std::string MovingDots::ALPHA_MULTIPLIER("alpha_multiplier");
+const std::string MovingDots::DIRECTION("direction");
+const std::string MovingDots::SPEED("speed");
+const std::string MovingDots::COHERENCE("coherence");
+const std::string MovingDots::LIFETIME("lifetime");
+const std::string MovingDots::ANNOUNCE_DOTS("announce_dots");
 
 
-void DynamicRandomDots::describeComponent(ComponentInfo &info) {
+void MovingDots::describeComponent(ComponentInfo &info) {
     StandardDynamicStimulus::describeComponent(info);
     
-    info.setSignature("stimulus/dynamic_random_dots");
-    info.setDisplayName("Dynamic Random Dots");
-    info.setDescription("A dynamic random dots stimulus.");
+    info.setSignature("stimulus/moving_dots");
+    info.setDisplayName("Moving Dots");
+    info.setDescription("A moving dots stimulus.");
 
     info.addParameter(FIELD_RADIUS);
     info.addParameter(FIELD_CENTER_X);
@@ -51,7 +51,7 @@ void DynamicRandomDots::describeComponent(ComponentInfo &info) {
 }
 
 
-DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
+MovingDots::MovingDots(const ParameterValueMap &parameters) :
     StandardDynamicStimulus(parameters),
     fieldRadius(parameters[FIELD_RADIUS]),
     fieldCenterX(parameters[FIELD_CENTER_X]),
@@ -72,7 +72,7 @@ DynamicRandomDots::DynamicRandomDots(const ParameterValueMap &parameters) :
 { }
 
 
-void DynamicRandomDots::load(shared_ptr<StimulusDisplay> display) {
+void MovingDots::load(shared_ptr<StimulusDisplay> display) {
     if (loaded)
         return;
 
@@ -84,7 +84,7 @@ void DynamicRandomDots::load(shared_ptr<StimulusDisplay> display) {
 }
 
 
-void DynamicRandomDots::validateParameters() const {
+void MovingDots::validateParameters() const {
     if (fieldRadius <= 0.0f) {
         throw SimpleException("field radius must be greater than 0");
     }
@@ -107,7 +107,7 @@ void DynamicRandomDots::validateParameters() const {
 }
 
 
-void DynamicRandomDots::computeDotSizeInPixels(shared_ptr<StimulusDisplay> display) {
+void MovingDots::computeDotSizeInPixels(shared_ptr<StimulusDisplay> display) {
     dotSizeInPixels.clear();
     
     GLdouble xMin, xMax, yMin, yMax;
@@ -123,7 +123,7 @@ void DynamicRandomDots::computeDotSizeInPixels(shared_ptr<StimulusDisplay> displ
 }
 
 
-void DynamicRandomDots::initializeDots() {
+void MovingDots::initializeDots() {
     dotPositions.resize(numDots * verticesPerDot);
     dotDirections.resize(numDots);
     dotAges.resize(numDots);
@@ -134,7 +134,7 @@ void DynamicRandomDots::initializeDots() {
 }
 
 
-void DynamicRandomDots::updateDots() {
+void MovingDots::updateDots() {
     const GLfloat dt = GLfloat(currentTime - previousTime) / 1.0e6f;
     const GLfloat dr = dt * speed->getValue().getFloat();
 
@@ -151,7 +151,7 @@ void DynamicRandomDots::updateDots() {
 }
 
 
-void DynamicRandomDots::replaceDot(GLint i, GLfloat age) {
+void MovingDots::replaceDot(GLint i, GLfloat age) {
     GLfloat &x = getX(i);
     GLfloat &y = getY(i);
     
@@ -168,7 +168,7 @@ void DynamicRandomDots::replaceDot(GLint i, GLfloat age) {
 }
 
 
-void DynamicRandomDots::advanceDot(GLint i, GLfloat dt, GLfloat dr) {
+void MovingDots::advanceDot(GLint i, GLfloat dt, GLfloat dr) {
     GLfloat &x = getX(i);
     GLfloat &y = getY(i);
     GLfloat &theta = getDirection(i);
@@ -196,7 +196,7 @@ void DynamicRandomDots::advanceDot(GLint i, GLfloat dt, GLfloat dr) {
 }
 
 
-void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display) {
+void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     // If we're drawing to the main display, update dot positions
     if (display->getCurrentContextIndex() == 0) {
         currentTime = getElapsedTime();
@@ -228,12 +228,12 @@ void DynamicRandomDots::drawFrame(shared_ptr<StimulusDisplay> display) {
 }
 
 
-Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
+Datum MovingDots::getCurrentAnnounceDrawData() {
     boost::mutex::scoped_lock locker(stim_lock);
 
     Datum announceData = StandardDynamicStimulus::getCurrentAnnounceDrawData();
 
-    announceData.addElement(STIM_TYPE, "dynamic_random_dots");
+    announceData.addElement(STIM_TYPE, "moving_dots");
     announceData.addElement(FIELD_RADIUS, fieldRadius);
     announceData.addElement(FIELD_CENTER_X, fieldCenterX);
     announceData.addElement(FIELD_CENTER_Y, fieldCenterY);
@@ -258,7 +258,7 @@ Datum DynamicRandomDots::getCurrentAnnounceDrawData() {
 }
 
 
-void DynamicRandomDots::stopPlaying() {
+void MovingDots::stopPlaying() {
     StandardDynamicStimulus::stopPlaying();
     previousTime = -1;
 }
