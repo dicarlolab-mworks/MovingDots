@@ -95,7 +95,7 @@ private:
     shared_ptr<Variable> announceDots;
     
     std::vector<GLfloat> dotSizeToPixels;
-    GLint numDots;
+    const GLint numDots;
     static const GLint verticesPerDot = 2;
     std::vector<GLfloat> dotPositions;
     std::vector<GLfloat> dotDirections;

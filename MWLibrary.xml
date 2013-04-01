@@ -23,8 +23,8 @@
                 speed=""
                 coherence="1.0"
                 lifetime="0.0"
-                announce_dots="0"
-                autoplay="1"
+                announce_dots="NO"
+                autoplay="YES"
                 />
     </code>
   </MWElement>
