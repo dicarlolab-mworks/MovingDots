@@ -79,11 +79,14 @@ private:
     }
     
     const GLfloat fieldRadius;
-    const GLfloat fieldCenterX, fieldCenterY;
+    shared_ptr<Variable> fieldCenterX;
+    shared_ptr<Variable> fieldCenterY;
     const GLfloat dotDensity;
     const GLfloat dotSize;
-    const mw::RGBColor color;
-    const GLfloat alpha;
+    shared_ptr<Variable> red;
+    shared_ptr<Variable> green;
+    shared_ptr<Variable> blue;
+    shared_ptr<Variable> alpha;
     const GLfloat directionInDegrees;
     const GLfloat direction;
     shared_ptr<Variable> speed;

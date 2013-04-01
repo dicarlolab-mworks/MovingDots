@@ -54,15 +54,14 @@ void MovingDots::describeComponent(ComponentInfo &info) {
 MovingDots::MovingDots(const ParameterValueMap &parameters) :
     StandardDynamicStimulus(parameters),
     fieldRadius(parameters[FIELD_RADIUS]),
-    fieldCenterX(parameters[FIELD_CENTER_X]),
-    fieldCenterY(parameters[FIELD_CENTER_Y]),
+    fieldCenterX(registerVariable(parameters[FIELD_CENTER_X])),
+    fieldCenterY(registerVariable(parameters[FIELD_CENTER_Y])),
     dotDensity(parameters[DOT_DENSITY]),
     dotSize(parameters[DOT_SIZE]),
-    color(parameters[COLOR]),
-    alpha(parameters[ALPHA_MULTIPLIER]),
+    alpha(registerVariable(parameters[ALPHA_MULTIPLIER])),
     directionInDegrees(parameters[DIRECTION]),
     direction(directionInDegrees / 180.0f * M_PI),  // Degrees to radians
-    speed(parameters[SPEED]),
+    speed(registerVariable(parameters[SPEED])),
     coherence(parameters[COHERENCE]),
     lifetime(std::max(0.0f, GLfloat(parameters[LIFETIME]))),
     announceDots(parameters[ANNOUNCE_DOTS]),
@@ -70,6 +69,11 @@ MovingDots::MovingDots(const ParameterValueMap &parameters) :
     previousTime(-1),
     currentTime(-1)
 {
+    ParsedColorTrio color(parameters[COLOR]);
+    red = registerVariable(color.getR());
+    green = registerVariable(color.getG());
+    blue = registerVariable(color.getB());
+    
     validateParameters();
 }
 
@@ -202,7 +206,7 @@ void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     }
 
     glPushMatrix();
-    glTranslatef(fieldCenterX, fieldCenterY, 0.0f);
+    glTranslatef(fieldCenterX->getValue().getFloat(), fieldCenterY->getValue().getFloat(), 0.0f);
     glScalef(fieldRadius, fieldRadius, 1.0f);
     
     // Enable antialiasing so dots are round, not square
@@ -212,7 +216,10 @@ void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
     
-    glColor4f(color.red, color.green, color.blue, alpha);
+    glColor4f(red->getValue().getFloat(),
+              green->getValue().getFloat(),
+              blue->getValue().getFloat(),
+              alpha->getValue().getFloat());
 
     glEnableClientState(GL_VERTEX_ARRAY);
 
@@ -236,14 +243,14 @@ Datum MovingDots::getCurrentAnnounceDrawData() {
 
     announceData.addElement(STIM_TYPE, "moving_dots");
     announceData.addElement(FIELD_RADIUS, fieldRadius);
-    announceData.addElement(FIELD_CENTER_X, fieldCenterX);
-    announceData.addElement(FIELD_CENTER_Y, fieldCenterY);
+    announceData.addElement(FIELD_CENTER_X, fieldCenterX->getValue().getFloat());
+    announceData.addElement(FIELD_CENTER_Y, fieldCenterY->getValue().getFloat());
     announceData.addElement(DOT_DENSITY, dotDensity);
     announceData.addElement(DOT_SIZE, dotSize);
-    announceData.addElement(STIM_COLOR_R, color.red);
-    announceData.addElement(STIM_COLOR_G, color.green);
-    announceData.addElement(STIM_COLOR_B, color.blue);
-    announceData.addElement(ALPHA_MULTIPLIER, alpha);
+    announceData.addElement(STIM_COLOR_R, red->getValue().getFloat());
+    announceData.addElement(STIM_COLOR_G, green->getValue().getFloat());
+    announceData.addElement(STIM_COLOR_B, blue->getValue().getFloat());
+    announceData.addElement(ALPHA_MULTIPLIER, alpha->getValue().getFloat());
     announceData.addElement(DIRECTION, directionInDegrees);
     announceData.addElement(SPEED, speed->getValue().getFloat());
     announceData.addElement(COHERENCE, coherence);
