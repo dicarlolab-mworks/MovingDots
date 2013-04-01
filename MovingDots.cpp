@@ -69,14 +69,15 @@ MovingDots::MovingDots(const ParameterValueMap &parameters) :
     numDots(GLint(boost::math::round(dotDensity * (M_PI * fieldRadius * fieldRadius)))),
     previousTime(-1),
     currentTime(-1)
-{ }
+{
+    validateParameters();
+}
 
 
 void MovingDots::load(shared_ptr<StimulusDisplay> display) {
     if (loaded)
         return;
 
-    validateParameters();
     computeDotSizeInPixels(display);
     initializeDots();
     
@@ -136,7 +137,7 @@ void MovingDots::initializeDots() {
 
 void MovingDots::updateDots() {
     const GLfloat dt = GLfloat(currentTime - previousTime) / 1.0e6f;
-    const GLfloat dr = dt * speed->getValue().getFloat();
+    const GLfloat dr = dt * speed->getValue().getFloat() / fieldRadius;
 
     for (GLint i = 0; i < numDots; i++) {
         GLfloat &age = getAge(i);
@@ -156,12 +157,9 @@ void MovingDots::replaceDot(GLint i, GLfloat age) {
     GLfloat &y = getY(i);
     
     do {
-        x = rand(-fieldRadius, fieldRadius);
-        y = rand(-fieldRadius, fieldRadius);
-    } while (x*x + y*y > fieldRadius*fieldRadius);
-    
-    x += fieldCenterX;
-    y += fieldCenterY;
+        x = rand(-1.0f, 1.0f);
+        y = rand(-1.0f, 1.0f);
+    } while (x*x + y*y > 1.0f);
     
     getDirection(i) = newDirection();
     getAge(i) = age;
@@ -176,20 +174,17 @@ void MovingDots::advanceDot(GLint i, GLfloat dt, GLfloat dr) {
     x += dr * std::cos(theta);
     y += dr * std::sin(theta);
     
-    GLfloat x1 = x - fieldCenterX;
-    GLfloat y1 = y - fieldCenterY;
-    
-    if (x1*x1 + y1*y1 > fieldRadius*fieldRadius) {
+    if (x*x + y*y > 1.0f) {
+        GLfloat x1 = x;
+        GLfloat y1 = y;
+        
         theta = newDirection();
         
-        y1 = rand(-fieldRadius, fieldRadius);
-        x1 = -std::sqrt(fieldRadius*fieldRadius - y1*y1) + rand(0.0f, dr);
+        y1 = rand(-1.0f, 1.0f);
+        x1 = -std::sqrt(1.0f - y1*y1) + rand(0.0f, dr);
         
         x = x1*std::cos(theta) - y1*std::sin(theta);
         y = x1*std::sin(theta) + y1*std::cos(theta);
-        
-        x += fieldCenterX;
-        y += fieldCenterY;
         
         getAge(i) = newAge();
     }
@@ -206,6 +201,10 @@ void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
         previousTime = currentTime;
     }
 
+    glPushMatrix();
+    glTranslatef(fieldCenterX, fieldCenterY, 0.0f);
+    glScalef(fieldRadius, fieldRadius, 1.0f);
+    
     // Enable antialiasing so dots are round, not square
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -225,6 +224,8 @@ void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     
     glDisable(GL_BLEND);
     glDisable(GL_POINT_SMOOTH);
+    
+    glPopMatrix();
 }
 
 

@@ -14,10 +14,9 @@ def validate_dots_data(filename):
                 data = numpy.fromstring(value['dots'], numpy.float32)
                 assert len(data) == (2 * value['num_dots'])
                 
-                x = data[::2] - value['field_center_x']
-                y = data[1::2] - value['field_center_y']
-                field_radius = value['field_radius']
-                assert (x*x + y*y).max() <= (field_radius * field_radius)
+                x = data[::2]
+                y = data[1::2]
+                assert (x*x + y*y).max() <= 1.0
                 
                 num_events += 1
 

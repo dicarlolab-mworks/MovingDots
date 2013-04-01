@@ -53,10 +53,9 @@ private:
     void replaceDot(GLint i, GLfloat age);
     void advanceDot(GLint i, GLfloat dt, GLfloat dr);
     
-    template<typename RealType>
-    RealType rand(RealType min, RealType max) {
-        const boost::uniform_real<RealType> randDist(min, max);
-        boost::variate_generator< boost::mt19937&, boost::uniform_real<RealType> > randVar(randGen, randDist);
+    GLfloat rand(GLfloat min, GLfloat max) {
+        const boost::uniform_real<GLfloat> randDist(min, max);
+        boost::variate_generator< boost::mt19937&, boost::uniform_real<GLfloat> > randVar(randGen, randDist);
         return randVar();
     }
     

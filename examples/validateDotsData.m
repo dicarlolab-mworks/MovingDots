@@ -22,11 +22,9 @@ for i = 1:length(events)
         assert(length(data) == (2 * value.num_dots), ...
                'Wrong number of dots');
         
-        x = data(1:2:end) - value.field_center_x;
-        y = data(2:2:end) - value.field_center_y;
-        field_radius = value.field_radius;
-        assert(max(x.*x + y.*y) <= (field_radius*field_radius), ...
-               'Invalid dot coordinates');
+        x = data(1:2:end);
+        y = data(2:2:end);
+        assert(max(x.*x + y.*y) <= 1.0, 'Invalid dot coordinates');
         
         nEvents = nEvents + 1;
     end
