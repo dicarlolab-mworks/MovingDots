@@ -57,7 +57,7 @@ MovingDots::MovingDots(const ParameterValueMap &parameters) :
     fieldCenterX(registerVariable(parameters[FIELD_CENTER_X])),
     fieldCenterY(registerVariable(parameters[FIELD_CENTER_Y])),
     dotDensity(parameters[DOT_DENSITY]),
-    dotSize(parameters[DOT_SIZE]),
+    dotSize(registerVariable(parameters[DOT_SIZE])),
     alpha(registerVariable(parameters[ALPHA_MULTIPLIER])),
     directionInDegrees(parameters[DIRECTION]),
     direction(directionInDegrees / 180.0f * M_PI),  // Degrees to radians
@@ -82,7 +82,7 @@ void MovingDots::load(shared_ptr<StimulusDisplay> display) {
     if (loaded)
         return;
 
-    computeDotSizeInPixels(display);
+    computeDotSizeToPixels(display);
     initializeDots();
     
     loaded = true;
@@ -102,18 +102,14 @@ void MovingDots::validateParameters() const {
         throw SimpleException("field radius and dot density yield 0 dots");
     }
     
-    if (dotSize <= 0.0f) {
-        throw SimpleException("dot size must be greater than 0");
-    }
-    
     if ((coherence < 0.0f) || (coherence > 1.0f)) {
         throw SimpleException("coherence must be between 0 and 1");
     }
 }
 
 
-void MovingDots::computeDotSizeInPixels(shared_ptr<StimulusDisplay> display) {
-    dotSizeInPixels.clear();
+void MovingDots::computeDotSizeToPixels(shared_ptr<StimulusDisplay> display) {
+    dotSizeToPixels.clear();
     
     GLdouble xMin, xMax, yMin, yMax;
     GLint width, height;
@@ -123,7 +119,7 @@ void MovingDots::computeDotSizeInPixels(shared_ptr<StimulusDisplay> display) {
     for (int i = 0; i < display->getNContexts(); i++) {
         OpenGLContextLock ctxLock = display->setCurrent(i);
         display->getCurrentViewportSize(width, height);
-        dotSizeInPixels.push_back(GLdouble(dotSize) / (xMax - xMin) * GLdouble(width));
+        dotSizeToPixels.push_back(GLdouble(width) / (xMax - xMin));
     }
 }
 
@@ -210,8 +206,8 @@ void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     glScalef(fieldRadius, fieldRadius, 1.0f);
     
     // Enable antialiasing so dots are round, not square
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
@@ -223,7 +219,7 @@ void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
 
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    glPointSize(dotSizeInPixels[display->getCurrentContextIndex()]);
+    glPointSize(dotSize->getValue().getFloat() * dotSizeToPixels[display->getCurrentContextIndex()]);
     glVertexPointer(verticesPerDot, GL_FLOAT, 0, &(dotPositions[0]));
     glDrawArrays(GL_POINTS, 0, numDots);
 
@@ -246,7 +242,7 @@ Datum MovingDots::getCurrentAnnounceDrawData() {
     announceData.addElement(FIELD_CENTER_X, fieldCenterX->getValue().getFloat());
     announceData.addElement(FIELD_CENTER_Y, fieldCenterY->getValue().getFloat());
     announceData.addElement(DOT_DENSITY, dotDensity);
-    announceData.addElement(DOT_SIZE, dotSize);
+    announceData.addElement(DOT_SIZE, dotSize->getValue().getFloat());
     announceData.addElement(STIM_COLOR_R, red->getValue().getFloat());
     announceData.addElement(STIM_COLOR_G, green->getValue().getFloat());
     announceData.addElement(STIM_COLOR_B, blue->getValue().getFloat());

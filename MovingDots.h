@@ -47,7 +47,7 @@ protected:
     
 private:
     void validateParameters() const;
-    void computeDotSizeInPixels(shared_ptr<StimulusDisplay> display);
+    void computeDotSizeToPixels(shared_ptr<StimulusDisplay> display);
     void initializeDots();
     void updateDots();
     void replaceDot(GLint i, GLfloat age);
@@ -82,7 +82,7 @@ private:
     shared_ptr<Variable> fieldCenterX;
     shared_ptr<Variable> fieldCenterY;
     const GLfloat dotDensity;
-    const GLfloat dotSize;
+    shared_ptr<Variable> dotSize;
     shared_ptr<Variable> red;
     shared_ptr<Variable> green;
     shared_ptr<Variable> blue;
@@ -94,7 +94,7 @@ private:
     const GLfloat lifetime;
     shared_ptr<Variable> announceDots;
     
-    std::vector<GLfloat> dotSizeInPixels;
+    std::vector<GLfloat> dotSizeToPixels;
     GLint numDots;
     static const GLint verticesPerDot = 2;
     std::vector<GLfloat> dotPositions;
