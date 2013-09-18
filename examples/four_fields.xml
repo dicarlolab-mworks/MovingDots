@@ -2,11 +2,11 @@
 <monkeyml version="1.0">
     <io_devices tag="IO Devices"></io_devices>
     <variables tag="Variables">
-        <variable tag="field_radius" scope="global" logging="when_changed" default_value="8" type="float"></variable>
-        <variable tag="field_center_x" scope="global" logging="when_changed" default_value="8.5" type="float"></variable>
-        <variable tag="field_center_y" scope="global" logging="when_changed" default_value="8.5" type="float"></variable>
-        <variable tag="dot_density" scope="global" logging="when_changed" default_value="4.974" type="float"></variable>
-        <variable tag="dot_size" scope="global" logging="when_changed" default_value="0.2" type="float"></variable>
+        <variable tag="field_radius" scope="global" logging="when_changed" default_value="4" type="float"></variable>
+        <variable tag="field_center_x" scope="global" logging="when_changed" default_value="4.5" type="float"></variable>
+        <variable tag="field_center_y" scope="global" logging="when_changed" default_value="4.5" type="float"></variable>
+        <variable tag="dot_density" scope="global" logging="when_changed" default_value="19.894" type="float"></variable>
+        <variable tag="dot_size" scope="global" logging="when_changed" default_value="0.1" type="float"></variable>
         <folder tag="Colors">
             <variable tag="color_r_00" scope="global" logging="when_changed" default_value="1.0" type="float"></variable>
             <variable tag="color_g_00" scope="global" logging="when_changed" default_value="1.0" type="float"></variable>
@@ -22,7 +22,7 @@
             <variable tag="color_b_11" scope="global" logging="when_changed" default_value="1.0" type="float"></variable>
         </folder>
         <variable tag="direction" scope="global" logging="when_changed" default_value="45" type="float"></variable>
-        <variable tag="speed" scope="global" logging="when_changed" default_value="2" type="float"></variable>
+        <variable tag="speed" scope="global" logging="when_changed" default_value="1" type="float"></variable>
         <variable tag="stop" scope="global" logging="when_changed" default_value="0" type="boolean"></variable>
         <variable tag="i" scope="local" logging="when_changed" default_value="0" type="integer"></variable>
         <variable tag="j" scope="local" logging="when_changed" default_value="0" type="integer"></variable>
