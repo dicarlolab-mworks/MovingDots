@@ -23,6 +23,7 @@
 			buildConfigurationList = E12A27091201E34D00CE8C55 /* Build configuration list for PBXAggregateTarget "Install" */;
 			buildPhases = (
 				E12A26F71201E2FB00CE8C55 /* CopyFiles */,
+				E125BFEE18E326B100F6C480 /* CopyFiles */,
 			);
 			dependencies = (
 				E12A26FB1201E30500CE8C55 /* PBXTargetDependency */,
@@ -36,6 +37,7 @@
 		5CF9AEBC0FD5795C00F405F6 /* MovingDotsPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CF9AEB90FD5795C00F405F6 /* MovingDotsPlugin.cpp */; };
 		5CFE591A0F571B15000C7F30 /* MovingDots.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CFE59190F571B15000C7F30 /* MovingDots.cpp */; };
 		BFBFB0D610446C180019216B /* MWorksCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBFB0D510446C180019216B /* MWorksCore.framework */; };
+		E125BFEF18E326BC00F6C480 /* MovingDots in CopyFiles */ = {isa = PBXBuildFile; fileRef = E125BFED18E3269700F6C480 /* MovingDots */; };
 		E12A26FD1201E31400CE8C55 /* MovingDots.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D5B49B6048680CD000E48DA /* MovingDots.bundle */; };
 		E15D0B4A16C2D15C00F331B1 /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E15D0B4916C2D15C00F331B1 /* libboost_system.a */; };
 		E162635B1403F774000F89CB /* MWLibrary.xml in Resources */ = {isa = PBXBuildFile; fileRef = E162635A1403F774000F89CB /* MWLibrary.xml */; };
@@ -60,6 +62,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		E125BFEE18E326B100F6C480 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(MW_TESTS_XML_DIR)/Stimulus";
+			dstSubfolderSpec = 0;
+			files = (
+				E125BFEF18E326BC00F6C480 /* MovingDots in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E12A26F71201E2FB00CE8C55 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -82,6 +94,7 @@
 		8D5B49B6048680CD000E48DA /* MovingDots.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovingDots.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* MovingDots-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "MovingDots-Info.plist"; sourceTree = "<group>"; };
 		BFBFB0D510446C180019216B /* MWorksCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MWorksCore.framework; path = /Library/Frameworks/MWorksCore.framework; sourceTree = "<absolute>"; };
+		E125BFED18E3269700F6C480 /* MovingDots */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MovingDots; sourceTree = "<group>"; };
 		E15D0B4916C2D15C00F331B1 /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_system.a; path = "/Library/Application Support/MWorks/Developer/lib/libboost_system.a"; sourceTree = "<absolute>"; };
 		E162635A1403F774000F89CB /* MWLibrary.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = MWLibrary.xml; sourceTree = "<group>"; };
 		E1FCD4CE11DAB1AE0037E6FA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -109,6 +122,7 @@
 				E16263591403F73F000F89CB /* Editor Definitions */,
 				32C88E010371C26100C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
+				E125BFEC18E3267600F6C480 /* Tests */,
 				089C1671FE841209C02AAC07 /* Frameworks & Libraries */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 			);
@@ -166,6 +180,14 @@
 				5C78EE6C115D02EE00151A76 /* WARNING.txt */,
 			);
 			name = "External Config";
+			sourceTree = "<group>";
+		};
+		E125BFEC18E3267600F6C480 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				E125BFED18E3269700F6C480 /* MovingDots */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		E16263591403F73F000F89CB /* Editor Definitions */ = {

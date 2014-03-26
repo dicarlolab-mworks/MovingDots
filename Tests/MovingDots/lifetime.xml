@@ -6,24 +6,15 @@
         <variable tag="field_center_x" scope="global" logging="when_changed" default_value="4.5" type="float"></variable>
         <variable tag="field_center_y" scope="global" logging="when_changed" default_value="4.5" type="float"></variable>
         <variable tag="dot_density" scope="global" logging="when_changed" default_value="19.894" type="float"></variable>
-        <variable tag="dot_size" scope="global" logging="when_changed" default_value="0.1" type="float"></variable>
-        <folder tag="Colors">
-            <variable tag="color_r_00" scope="global" logging="when_changed" default_value="1.0" type="float"></variable>
-            <variable tag="color_g_00" scope="global" logging="when_changed" default_value="1.0" type="float"></variable>
-            <variable tag="color_b_00" scope="global" logging="when_changed" default_value="1.0" type="float"></variable>
-            <variable tag="color_r_01" scope="global" logging="when_changed" default_value="1.0" type="float"></variable>
-            <variable tag="color_g_01" scope="global" logging="when_changed" default_value="0.0" type="float"></variable>
-            <variable tag="color_b_01" scope="global" logging="when_changed" default_value="0.0" type="float"></variable>
-            <variable tag="color_r_10" scope="global" logging="when_changed" default_value="0.0" type="float"></variable>
-            <variable tag="color_g_10" scope="global" logging="when_changed" default_value="1.0" type="float"></variable>
-            <variable tag="color_b_10" scope="global" logging="when_changed" default_value="0.0" type="float"></variable>
-            <variable tag="color_r_11" scope="global" logging="when_changed" default_value="0.0" type="float"></variable>
-            <variable tag="color_g_11" scope="global" logging="when_changed" default_value="0.0" type="float"></variable>
-            <variable tag="color_b_11" scope="global" logging="when_changed" default_value="1.0" type="float"></variable>
-        </folder>
+        <variable tag="dot_size" scope="global" logging="when_changed" default_value="0.05" type="float"></variable>
         <variable tag="direction" scope="global" logging="when_changed" default_value="45" type="float"></variable>
-        <variable tag="speed" scope="global" logging="when_changed" default_value="1" type="float"></variable>
-        <variable tag="stop" scope="global" logging="when_changed" default_value="0" type="boolean"></variable>
+        <variable tag="speed" scope="global" logging="when_changed" default_value="0.75" type="float"></variable>
+        <folder tag="Lifetimes">
+            <variable tag="lifetime_00" scope="global" logging="when_changed" default_value="10.0" type="float"></variable>
+            <variable tag="lifetime_01" scope="global" logging="when_changed" default_value="0.5" type="float"></variable>
+            <variable tag="lifetime_10" scope="global" logging="when_changed" default_value="0.0" type="float"></variable>
+            <variable tag="lifetime_11" scope="global" logging="when_changed" default_value="2.0" type="float"></variable>
+        </folder>
         <variable tag="i" scope="local" logging="when_changed" default_value="0" type="integer"></variable>
         <variable tag="j" scope="local" logging="when_changed" default_value="0" type="integer"></variable>
     </variables>
@@ -32,7 +23,8 @@
         <stimulus tag="background" full_name="background" type="blank_screen" color="0.5, 0.5, 0.5"></stimulus>
         <range_replicator tag="New Replicator" from="0" to="1" step="1" variable="i">
             <range_replicator tag="New Replicator 2" from="0" to="1" step="1" variable="j">
-                <stimulus type="moving_dots" tag="dots${i}${j}" field_radius="field_radius" field_center_x="field_center_x * pow(-1, ${i})" field_center_y="field_center_y * pow(-1, ${j})" dot_density="dot_density" dot_size="dot_size" color="color_r_${i}${j},color_g_${i}${j},color_b_${i}${j}" alpha_multiplier="1.0" direction="direction + 270*(int)(${i}==0 &amp;&amp; ${j}==1) + 90*(int)(${i}==1 &amp;&amp; ${j}==0) + 180*(int)(${i}==1 &amp;&amp; ${j}==1)" speed="speed" autoplay="1"></stimulus>
+                <stimulus type="circle" tag="field${i}${j}" color="0,0,0" x_size="2*field_radius" y_size="2*field_radius" x_position="field_center_x * pow(-1, ${i})" y_position="field_center_y * pow(-1, ${j})" rotation="0" alpha_multiplier="1"></stimulus>
+                <stimulus type="moving_dots" tag="dots${i}${j}" field_radius="field_radius" field_center_x="field_center_x * pow(-1, ${i})" field_center_y="field_center_y * pow(-1, ${j})" dot_density="dot_density" dot_size="dot_size" color="1,1,1" alpha_multiplier="1.0" direction="direction" speed="speed" lifetime="lifetime_${i}${j}" autoplay="1"></stimulus>
             </range_replicator>
         </range_replicator>
     </stimuli>
@@ -44,15 +36,19 @@
                 <task_system_state tag="Begin State System" interruptible="YES">
                     <action_marker _unmoveable="1" tag="Actions"></action_marker>
                     <action type="report" tag="Announce Begin State System" message="State system beginning"></action>
-                    <action type="assignment" tag="Assign Variable" variable="stop" value="0"></action>
                     <action tag="Queue background" type="queue_stimulus" stimulus="background"></action>
+                    <action tag="Queue field00" type="queue_stimulus" stimulus="field00"></action>
+                    <action tag="Queue field01" type="queue_stimulus" stimulus="field01"></action>
+                    <action tag="Queue field10" type="queue_stimulus" stimulus="field10"></action>
+                    <action tag="Queue field11" type="queue_stimulus" stimulus="field11"></action>
                     <action tag="Queue dots00" type="queue_stimulus" stimulus="dots00"></action>
                     <action tag="Queue dots01" type="queue_stimulus" stimulus="dots01"></action>
                     <action tag="Queue dots10" type="queue_stimulus" stimulus="dots10"></action>
                     <action tag="Queue dots11" type="queue_stimulus" stimulus="dots11"></action>
                     <action tag="Update display" type="update_stimulus_display"></action>
+                    <action type="start_timer" tag="Start Timer" timer="MyTimer" timebase="" duration="60" duration_units="s"></action>
                     <transition_marker _unmoveable="1" tag="Transitions"></transition_marker>
-                    <transition type="conditional" tag="If Condition is True, Transition to ..." condition="stop" target="Exit State System"></transition>
+                    <transition type="timer_expired" tag="If Timer Expired, Transition to ..." target="Exit State System" timer="MyTimer"></transition>
                 </task_system_state>
                 <task_system_state tag="Exit State System" interruptible="YES">
                     <action_marker _unmoveable="1" tag="Actions"></action_marker>
