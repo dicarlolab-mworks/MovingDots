@@ -59,8 +59,7 @@ MovingDots::MovingDots(const ParameterValueMap &parameters) :
     dotDensity(parameters[DOT_DENSITY]),
     dotSize(registerVariable(parameters[DOT_SIZE])),
     alpha(registerVariable(parameters[ALPHA_MULTIPLIER])),
-    directionInDegrees(parameters[DIRECTION]),
-    direction(directionInDegrees / 180.0f * M_PI),  // Degrees to radians
+    direction(registerVariable(parameters[DIRECTION])),
     speed(registerVariable(parameters[SPEED])),
     coherence(parameters[COHERENCE]),
     lifetime(std::max(0.0f, GLfloat(parameters[LIFETIME]))),
@@ -202,6 +201,7 @@ void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     }
 
     glPushMatrix();
+    glRotatef(direction->getValue().getFloat(), 0.0f, 0.0f, 1.0f);
     glTranslatef(fieldCenterX->getValue().getFloat(), fieldCenterY->getValue().getFloat(), 0.0f);
     glScalef(fieldRadius, fieldRadius, 1.0f);
     
@@ -247,7 +247,7 @@ Datum MovingDots::getCurrentAnnounceDrawData() {
     announceData.addElement(STIM_COLOR_G, green->getValue().getFloat());
     announceData.addElement(STIM_COLOR_B, blue->getValue().getFloat());
     announceData.addElement(ALPHA_MULTIPLIER, alpha->getValue().getFloat());
-    announceData.addElement(DIRECTION, directionInDegrees);
+    announceData.addElement(DIRECTION, direction->getValue().getFloat());
     announceData.addElement(SPEED, speed->getValue().getFloat());
     announceData.addElement(COHERENCE, coherence);
     announceData.addElement(LIFETIME, lifetime);

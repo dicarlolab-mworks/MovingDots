@@ -68,7 +68,7 @@ private:
         if ((coherence == 0.0f) || ((coherence != 1.0f) && (rand(0.0f, 1.0f) > coherence))) {
             return rand(0.0f, 360.0f);
         }
-        return direction;
+        return 0.0f;
     }
     
     GLfloat newAge() {
@@ -87,8 +87,7 @@ private:
     shared_ptr<Variable> green;
     shared_ptr<Variable> blue;
     shared_ptr<Variable> alpha;
-    const GLfloat directionInDegrees;
-    const GLfloat direction;
+    shared_ptr<Variable> direction;
     shared_ptr<Variable> speed;
     const GLfloat coherence;
     const GLfloat lifetime;
