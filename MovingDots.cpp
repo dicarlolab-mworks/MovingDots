@@ -201,9 +201,9 @@ void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     }
 
     glPushMatrix();
-    glRotatef(direction->getValue().getFloat(), 0.0f, 0.0f, 1.0f);
     glTranslatef(fieldCenterX->getValue().getFloat(), fieldCenterY->getValue().getFloat(), 0.0f);
     glScalef(fieldRadius, fieldRadius, 1.0f);
+    glRotatef(direction->getValue().getFloat(), 0.0f, 0.0f, 1.0f);
     
     // Enable antialiasing so dots are round, not square
     glEnable(GL_BLEND);
