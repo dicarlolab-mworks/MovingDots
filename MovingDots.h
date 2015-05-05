@@ -46,9 +46,9 @@ protected:
     void stopPlaying() MW_OVERRIDE;
     
 private:
-    void validateParameters() const;
+    bool computeNumDots();
     void computeDotSizeToPixels(shared_ptr<StimulusDisplay> display);
-    void initializeDots();
+    void initializeDots(GLint startIndex = 0);
     void updateDots();
     void replaceDot(GLint i, GLfloat age);
     void advanceDot(GLint i, GLfloat dt, GLfloat dr);
@@ -78,10 +78,10 @@ private:
         return 0.0f;
     }
     
-    const GLfloat fieldRadius;
+    shared_ptr<Variable> fieldRadius;
     shared_ptr<Variable> fieldCenterX;
     shared_ptr<Variable> fieldCenterY;
-    const GLfloat dotDensity;
+    shared_ptr<Variable> dotDensity;
     shared_ptr<Variable> dotSize;
     shared_ptr<Variable> red;
     shared_ptr<Variable> green;
@@ -94,12 +94,13 @@ private:
     shared_ptr<Variable> announceDots;
     
     std::vector<GLfloat> dotSizeToPixels;
-    const GLint numDots;
+    GLfloat currentFieldRadius;
+    GLint numDots, previousNumDots;
     static const GLint verticesPerDot = 2;
     std::vector<GLfloat> dotPositions;
     std::vector<GLfloat> dotDirections;
     std::vector<GLfloat> dotAges;
-
+    
     boost::mt19937 randGen;
     
     MWTime previousTime, currentTime;

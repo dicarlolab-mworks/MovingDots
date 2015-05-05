@@ -53,10 +53,10 @@ void MovingDots::describeComponent(ComponentInfo &info) {
 
 MovingDots::MovingDots(const ParameterValueMap &parameters) :
     StandardDynamicStimulus(parameters),
-    fieldRadius(parameters[FIELD_RADIUS]),
+    fieldRadius(registerVariable(parameters[FIELD_RADIUS])),
     fieldCenterX(registerVariable(parameters[FIELD_CENTER_X])),
     fieldCenterY(registerVariable(parameters[FIELD_CENTER_Y])),
-    dotDensity(parameters[DOT_DENSITY]),
+    dotDensity(registerVariable(parameters[DOT_DENSITY])),
     dotSize(registerVariable(parameters[DOT_SIZE])),
     alpha(registerVariable(parameters[ALPHA_MULTIPLIER])),
     direction(registerVariable(parameters[DIRECTION])),
@@ -64,7 +64,9 @@ MovingDots::MovingDots(const ParameterValueMap &parameters) :
     coherence(parameters[COHERENCE]),
     lifetime(std::max(0.0f, GLfloat(parameters[LIFETIME]))),
     announceDots(parameters[ANNOUNCE_DOTS]),
-    numDots(GLint(boost::math::round(dotDensity * (M_PI * fieldRadius * fieldRadius)))),
+    currentFieldRadius(1.0f),
+    numDots(0),
+    previousNumDots(0),
     previousTime(-1),
     currentTime(-1)
 {
@@ -73,7 +75,9 @@ MovingDots::MovingDots(const ParameterValueMap &parameters) :
     green = registerVariable(color.getG());
     blue = registerVariable(color.getB());
     
-    validateParameters();
+    if ((coherence < 0.0f) || (coherence > 1.0f)) {
+        throw SimpleException("coherence must be between 0 and 1");
+    }
 }
 
 
@@ -82,28 +86,35 @@ void MovingDots::load(shared_ptr<StimulusDisplay> display) {
         return;
 
     computeDotSizeToPixels(display);
-    initializeDots();
     
     loaded = true;
 }
 
 
-void MovingDots::validateParameters() const {
-    if (fieldRadius <= 0.0f) {
-        throw SimpleException("field radius must be greater than 0");
-    }
-
-    if (dotDensity <= 0.0f) {
-        throw SimpleException("dot density must be greater than 0");
+bool MovingDots::computeNumDots() {
+    const double radius = fieldRadius->getValue().getFloat();
+    if (radius <= 0.0) {
+        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field radius must be greater than 0");
+        return false;
     }
     
-    if (numDots < 1) {
-        throw SimpleException("field radius and dot density yield 0 dots");
+    const double density = dotDensity->getValue().getFloat();
+    if (density <= 0.0) {
+        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field density must be greater than 0");
+        return false;
     }
     
-    if ((coherence < 0.0f) || (coherence > 1.0f)) {
-        throw SimpleException("coherence must be between 0 and 1");
+    const GLint candidateNumDots = GLint(boost::math::round(density * (M_PI * radius * radius)));
+    if (candidateNumDots < 1) {
+        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field radius and dot density yield 0 dots");
+        return false;
     }
+    
+    currentFieldRadius = radius;
+    previousNumDots = numDots;
+    numDots = candidateNumDots;
+    
+    return true;
 }
 
 
@@ -123,12 +134,12 @@ void MovingDots::computeDotSizeToPixels(shared_ptr<StimulusDisplay> display) {
 }
 
 
-void MovingDots::initializeDots() {
+void MovingDots::initializeDots(GLint startIndex) {
     dotPositions.resize(numDots * verticesPerDot);
     dotDirections.resize(numDots);
     dotAges.resize(numDots);
 
-    for (GLint i = 0; i < numDots; i++) {
+    for (GLint i = startIndex; i < numDots; i++) {
         replaceDot(i, newAge());
     }
 }
@@ -136,7 +147,7 @@ void MovingDots::initializeDots() {
 
 void MovingDots::updateDots() {
     const GLfloat dt = GLfloat(currentTime - previousTime) / 1.0e6f;
-    const GLfloat dr = dt * speed->getValue().getFloat() / fieldRadius;
+    const GLfloat dr = dt * speed->getValue().getFloat() / currentFieldRadius;
 
     for (GLint i = 0; i < numDots; i++) {
         GLfloat &age = getAge(i);
@@ -191,18 +202,35 @@ void MovingDots::advanceDot(GLint i, GLfloat dt, GLfloat dr) {
 
 
 void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
-    // If we're drawing to the main display, update dot positions
+    //
+    // If we're drawing to the main display, update dots
+    //
+    
     if (display->getCurrentContextIndex() == 0) {
         currentTime = getElapsedTime();
-        if ((previousTime != -1) && (previousTime != currentTime)) {
+        if (previousTime != currentTime) {
             updateDots();
+            
+            if (computeNumDots() && (numDots != previousNumDots)) {
+                initializeDots(previousNumDots);
+            }
+            
+            previousTime = currentTime;
         }
-        previousTime = currentTime;
     }
-
+    
+    if (0 == numDots) {
+        // No dots, so nothing to draw
+        return;
+    }
+    
+    //
+    // Draw the dots
+    //
+    
     glPushMatrix();
     glTranslatef(fieldCenterX->getValue().getFloat(), fieldCenterY->getValue().getFloat(), 0.0f);
-    glScalef(fieldRadius, fieldRadius, 1.0f);
+    glScalef(currentFieldRadius, currentFieldRadius, 1.0f);
     glRotatef(direction->getValue().getFloat(), 0.0f, 0.0f, 1.0f);
     
     // Enable antialiasing so dots are round, not square
@@ -238,10 +266,10 @@ Datum MovingDots::getCurrentAnnounceDrawData() {
     Datum announceData = StandardDynamicStimulus::getCurrentAnnounceDrawData();
 
     announceData.addElement(STIM_TYPE, "moving_dots");
-    announceData.addElement(FIELD_RADIUS, fieldRadius);
+    announceData.addElement(FIELD_RADIUS, currentFieldRadius);
     announceData.addElement(FIELD_CENTER_X, fieldCenterX->getValue().getFloat());
     announceData.addElement(FIELD_CENTER_Y, fieldCenterY->getValue().getFloat());
-    announceData.addElement(DOT_DENSITY, dotDensity);
+    announceData.addElement(DOT_DENSITY, dotDensity->getValue().getFloat());
     announceData.addElement(DOT_SIZE, dotSize->getValue().getFloat());
     announceData.addElement(STIM_COLOR_R, red->getValue().getFloat());
     announceData.addElement(STIM_COLOR_G, green->getValue().getFloat());
