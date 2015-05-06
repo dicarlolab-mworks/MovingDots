@@ -65,15 +65,15 @@ private:
     GLfloat& getAge(GLint i) { return dotAges[i]; }
     
     GLfloat newDirection() {
-        if ((coherence == 0.0f) || ((coherence != 1.0f) && (rand(0.0f, 1.0f) > coherence))) {
+        if ((currentCoherence == 0.0f) || ((currentCoherence != 1.0f) && (rand(0.0f, 1.0f) > currentCoherence))) {
             return rand(0.0f, 360.0f);
         }
         return 0.0f;
     }
     
     GLfloat newAge() {
-        if (lifetime != 0.0f) {
-            return rand(0.0f, lifetime);
+        if (currentLifetime != 0.0f) {
+            return rand(0.0f, currentLifetime);
         }
         return 0.0f;
     }
@@ -89,13 +89,15 @@ private:
     shared_ptr<Variable> alpha;
     shared_ptr<Variable> direction;
     shared_ptr<Variable> speed;
-    const GLfloat coherence;
-    const GLfloat lifetime;
+    shared_ptr<Variable> coherence;
+    shared_ptr<Variable> lifetime;
     shared_ptr<Variable> announceDots;
     
     std::vector<GLfloat> dotSizeToPixels;
     GLfloat currentFieldRadius;
     GLint numDots, previousNumDots;
+    GLfloat currentCoherence;
+    GLfloat currentLifetime;
     static const GLint verticesPerDot = 2;
     std::vector<GLfloat> dotPositions;
     std::vector<GLfloat> dotDirections;

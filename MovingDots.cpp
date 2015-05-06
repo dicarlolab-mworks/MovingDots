@@ -61,12 +61,14 @@ MovingDots::MovingDots(const ParameterValueMap &parameters) :
     alpha(registerVariable(parameters[ALPHA_MULTIPLIER])),
     direction(registerVariable(parameters[DIRECTION])),
     speed(registerVariable(parameters[SPEED])),
-    coherence(parameters[COHERENCE]),
-    lifetime(std::max(0.0f, GLfloat(parameters[LIFETIME]))),
+    coherence(registerVariable(parameters[COHERENCE])),
+    lifetime(registerVariable(parameters[LIFETIME])),
     announceDots(parameters[ANNOUNCE_DOTS]),
     currentFieldRadius(1.0f),
     numDots(0),
     previousNumDots(0),
+    currentCoherence(1.0f),
+    currentLifetime(0.0f),
     previousTime(-1),
     currentTime(-1)
 {
@@ -74,10 +76,6 @@ MovingDots::MovingDots(const ParameterValueMap &parameters) :
     red = registerVariable(color.getR());
     green = registerVariable(color.getG());
     blue = registerVariable(color.getB());
-    
-    if ((coherence < 0.0f) || (coherence > 1.0f)) {
-        throw SimpleException("coherence must be between 0 and 1");
-    }
 }
 
 
@@ -146,14 +144,42 @@ void MovingDots::initializeDots(GLint startIndex) {
 
 
 void MovingDots::updateDots() {
+    // Update directions
+    {
+        const GLfloat newCoherence = coherence->getValue().getFloat();
+        if ((newCoherence < 0.0f) || (newCoherence > 1.0f)) {
+            merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field coherence must be between 0 and 1");
+        } else if (newCoherence != currentCoherence) {
+            currentCoherence = newCoherence;
+            for (GLint i = 0; i < numDots; i++) {
+                getDirection(i) = newDirection();
+            }
+        }
+    }
+    
+    // Update ages
+    {
+        const GLfloat newLifetime = std::max(0.0f, GLfloat(lifetime->getValue().getFloat()));
+        if (newLifetime != currentLifetime) {
+            currentLifetime = newLifetime;
+            for (GLint i = 0; i < numDots; i++) {
+                getAge(i) = newAge();
+            }
+        }
+    }
+    
+    //
+    // Update positions
+    //
+    
     const GLfloat dt = GLfloat(currentTime - previousTime) / 1.0e6f;
     const GLfloat dr = dt * speed->getValue().getFloat() / currentFieldRadius;
-
+    
     for (GLint i = 0; i < numDots; i++) {
         GLfloat &age = getAge(i);
         age += dt;
         
-        if ((age <= lifetime) || (lifetime == 0.0f)) {
+        if ((age <= currentLifetime) || (currentLifetime == 0.0f)) {
             advanceDot(i, dt, dr);
         } else {
             replaceDot(i, 0.0f);
@@ -277,8 +303,8 @@ Datum MovingDots::getCurrentAnnounceDrawData() {
     announceData.addElement(ALPHA_MULTIPLIER, alpha->getValue().getFloat());
     announceData.addElement(DIRECTION, direction->getValue().getFloat());
     announceData.addElement(SPEED, speed->getValue().getFloat());
-    announceData.addElement(COHERENCE, coherence);
-    announceData.addElement(LIFETIME, lifetime);
+    announceData.addElement(COHERENCE, currentCoherence);
+    announceData.addElement(LIFETIME, currentLifetime);
     announceData.addElement("num_dots", long(numDots));
     
     if (announceDots->getValue().getBool()) {
