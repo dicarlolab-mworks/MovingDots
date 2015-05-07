@@ -132,8 +132,13 @@ void MovingDots::updateParameters() {
     // Speed
     //
     
-    previousSpeed = currentSpeed;
-    currentSpeed = speed->getValue().getFloat();
+    const GLfloat newSpeed = speed->getValue().getFloat();
+    if (newSpeed < 0.0f) {
+        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field speed must be non-negative");
+    } else {
+        previousSpeed = currentSpeed;
+        currentSpeed = newSpeed;
+    }
     
     //
     // Coherence
@@ -151,8 +156,13 @@ void MovingDots::updateParameters() {
     // Lifetime
     //
     
-    previousLifetime = currentLifetime;
-    currentLifetime = std::max(0.0f, GLfloat(lifetime->getValue().getFloat()));
+    const GLfloat newLifetime = lifetime->getValue().getFloat();
+    if (newLifetime < 0.0f) {
+        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field lifetime must be non-negative");
+    } else {
+        previousLifetime = currentLifetime;
+        currentLifetime = newLifetime;
+    }
 }
 
 
