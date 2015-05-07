@@ -64,10 +64,15 @@ MovingDots::MovingDots(const ParameterValueMap &parameters) :
     coherence(registerVariable(parameters[COHERENCE])),
     lifetime(registerVariable(parameters[LIFETIME])),
     announceDots(parameters[ANNOUNCE_DOTS]),
+    previousFieldRadius(1.0f),
     currentFieldRadius(1.0f),
-    numDots(0),
     previousNumDots(0),
+    currentNumDots(0),
+    previousSpeed(0.0f),
+    currentSpeed(0.0f),
+    previousCoherence(1.0f),
     currentCoherence(1.0f),
+    previousLifetime(0.0f),
     currentLifetime(0.0f),
     previousTime(-1),
     currentTime(-1)
@@ -83,45 +88,11 @@ void MovingDots::load(shared_ptr<StimulusDisplay> display) {
     if (loaded)
         return;
 
-    computeDotSizeToPixels(display);
-    
-    loaded = true;
-}
-
-
-bool MovingDots::computeNumDots() {
-    const double radius = fieldRadius->getValue().getFloat();
-    if (radius <= 0.0) {
-        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field radius must be greater than 0");
-        return false;
-    }
-    
-    const double density = dotDensity->getValue().getFloat();
-    if (density <= 0.0) {
-        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field density must be greater than 0");
-        return false;
-    }
-    
-    const GLint candidateNumDots = GLint(boost::math::round(density * (M_PI * radius * radius)));
-    if (candidateNumDots < 1) {
-        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field radius and dot density yield 0 dots");
-        return false;
-    }
-    
-    currentFieldRadius = radius;
-    previousNumDots = numDots;
-    numDots = candidateNumDots;
-    
-    return true;
-}
-
-
-void MovingDots::computeDotSizeToPixels(shared_ptr<StimulusDisplay> display) {
     dotSizeToPixels.clear();
     
     GLdouble xMin, xMax, yMin, yMax;
     GLint width, height;
-
+    
     display->getDisplayBounds(xMin, xMax, yMin, yMax);
     
     for (int i = 0; i < display->getNContexts(); i++) {
@@ -129,76 +100,115 @@ void MovingDots::computeDotSizeToPixels(shared_ptr<StimulusDisplay> display) {
         display->getCurrentViewportSize(width, height);
         dotSizeToPixels.push_back(GLdouble(width) / (xMax - xMin));
     }
+    
+    loaded = true;
 }
 
 
-void MovingDots::initializeDots(GLint startIndex) {
-    dotPositions.resize(numDots * verticesPerDot);
-    dotDirections.resize(numDots);
-    dotAges.resize(numDots);
-
-    for (GLint i = startIndex; i < numDots; i++) {
-        replaceDot(i, newAge());
+void MovingDots::updateParameters() {
+    //
+    // Field radius, dot density, and number of dots
+    //
+    
+    const double newFieldRadius = fieldRadius->getValue().getFloat();
+    const double newDotDensity = dotDensity->getValue().getFloat();
+    const GLint newNumDots = GLint(boost::math::round(newDotDensity * (M_PI * newFieldRadius * newFieldRadius)));
+    
+    if (newFieldRadius <= 0.0) {
+        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field radius must be greater than 0");
+    } else if (newDotDensity <= 0.0) {
+        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field density must be greater than 0");
+    } else if (newNumDots < 1) {
+        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field radius and dot density yield 0 dots");
+    } else {
+        previousFieldRadius = currentFieldRadius;
+        currentFieldRadius = newFieldRadius;
+        
+        previousNumDots = currentNumDots;
+        currentNumDots = newNumDots;
     }
+    
+    //
+    // Speed
+    //
+    
+    previousSpeed = currentSpeed;
+    currentSpeed = speed->getValue().getFloat();
+    
+    //
+    // Coherence
+    //
+    
+    const GLfloat newCoherence = coherence->getValue().getFloat();
+    if ((newCoherence < 0.0f) || (newCoherence > 1.0f)) {
+        merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field coherence must be between 0 and 1");
+    } else {
+        previousCoherence = currentCoherence;
+        currentCoherence = newCoherence;
+    }
+    
+    //
+    // Lifetime
+    //
+    
+    previousLifetime = currentLifetime;
+    currentLifetime = std::max(0.0f, GLfloat(lifetime->getValue().getFloat()));
 }
 
 
 void MovingDots::updateDots() {
-    // Update directions
-    {
-        const GLfloat newCoherence = coherence->getValue().getFloat();
-        if ((newCoherence < 0.0f) || (newCoherence > 1.0f)) {
-            merror(M_DISPLAY_MESSAGE_DOMAIN, "Dot field coherence must be between 0 and 1");
-        } else if (newCoherence != currentCoherence) {
-            currentCoherence = newCoherence;
-            for (GLint i = 0; i < numDots; i++) {
-                getDirection(i) = newDirection();
-            }
-        }
-    }
-    
-    // Update ages
-    {
-        const GLfloat newLifetime = std::max(0.0f, GLfloat(lifetime->getValue().getFloat()));
-        if (newLifetime != currentLifetime) {
-            currentLifetime = newLifetime;
-            for (GLint i = 0; i < numDots; i++) {
-                getAge(i) = newAge();
-            }
-        }
-    }
-    
     //
     // Update positions
     //
     
+    const GLint numValidDots = std::min(previousNumDots, currentNumDots);
     const GLfloat dt = GLfloat(currentTime - previousTime) / 1.0e6f;
-    const GLfloat dr = dt * speed->getValue().getFloat() / currentFieldRadius;
+    const GLfloat dr = dt * previousSpeed / previousFieldRadius;
     
-    for (GLint i = 0; i < numDots; i++) {
+    for (GLint i = 0; i < numValidDots; i++) {
         GLfloat &age = getAge(i);
         age += dt;
         
-        if ((age <= currentLifetime) || (currentLifetime == 0.0f)) {
+        if ((age <= previousLifetime) || (previousLifetime == 0.0f)) {
             advanceDot(i, dt, dr);
         } else {
-            replaceDot(i, 0.0f);
+            replaceDot(i, newDirection(previousCoherence), 0.0f);
         }
     }
-}
-
-
-void MovingDots::replaceDot(GLint i, GLfloat age) {
-    GLfloat &x = getX(i);
-    GLfloat &y = getY(i);
     
-    do {
-        x = rand(-1.0f, 1.0f);
-        y = rand(-1.0f, 1.0f);
-    } while (x*x + y*y > 1.0f);
+    //
+    // Update directions
+    //
     
-    getDirection(i) = newDirection();
-    getAge(i) = age;
+    if (currentCoherence != previousCoherence) {
+        for (GLint i = 0; i < numValidDots; i++) {
+            getDirection(i) = newDirection(currentCoherence);
+        }
+    }
+    
+    //
+    // Update lifetimes
+    //
+    
+    if (currentLifetime != previousLifetime) {
+        for (GLint i = 0; i < numValidDots; i++) {
+            getAge(i) = newAge(currentLifetime);
+        }
+    }
+    
+    //
+    // Add/remove dots
+    //
+    
+    if (currentNumDots != previousNumDots) {
+        dotPositions.resize(currentNumDots * verticesPerDot);
+        dotDirections.resize(currentNumDots);
+        dotAges.resize(currentNumDots);
+        
+        for (GLint i = previousNumDots; i < currentNumDots; i++) {
+            replaceDot(i, newDirection(currentCoherence), newAge(currentLifetime));
+        }
+    }
 }
 
 
@@ -211,19 +221,30 @@ void MovingDots::advanceDot(GLint i, GLfloat dt, GLfloat dr) {
     y += dr * std::sin(theta);
     
     if (x*x + y*y > 1.0f) {
-        GLfloat x1 = x;
-        GLfloat y1 = y;
+        theta = newDirection(previousCoherence);
         
-        theta = newDirection();
-        
-        y1 = rand(-1.0f, 1.0f);
-        x1 = -std::sqrt(1.0f - y1*y1) + rand(0.0f, dr);
+        GLfloat y1 = rand(-1.0f, 1.0f);
+        GLfloat x1 = -std::sqrt(1.0f - y1*y1) + rand(0.0f, dr);
         
         x = x1*std::cos(theta) - y1*std::sin(theta);
         y = x1*std::sin(theta) + y1*std::cos(theta);
         
-        getAge(i) = newAge();
+        getAge(i) = newAge(previousLifetime);
     }
+}
+
+
+void MovingDots::replaceDot(GLint i, GLfloat direction, GLfloat age) {
+    GLfloat &x = getX(i);
+    GLfloat &y = getY(i);
+    
+    do {
+        x = rand(-1.0f, 1.0f);
+        y = rand(-1.0f, 1.0f);
+    } while (x*x + y*y > 1.0f);
+    
+    getDirection(i) = direction;
+    getAge(i) = age;
 }
 
 
@@ -235,17 +256,13 @@ void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
     if (display->getCurrentContextIndex() == 0) {
         currentTime = getElapsedTime();
         if (previousTime != currentTime) {
+            updateParameters();
             updateDots();
-            
-            if (computeNumDots() && (numDots != previousNumDots)) {
-                initializeDots(previousNumDots);
-            }
-            
             previousTime = currentTime;
         }
     }
     
-    if (0 == numDots) {
+    if (0 == currentNumDots) {
         // No dots, so nothing to draw
         return;
     }
@@ -275,7 +292,7 @@ void MovingDots::drawFrame(shared_ptr<StimulusDisplay> display) {
 
     glPointSize(dotSize->getValue().getFloat() * dotSizeToPixels[display->getCurrentContextIndex()]);
     glVertexPointer(verticesPerDot, GL_FLOAT, 0, &(dotPositions[0]));
-    glDrawArrays(GL_POINTS, 0, numDots);
+    glDrawArrays(GL_POINTS, 0, currentNumDots);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     
@@ -302,10 +319,10 @@ Datum MovingDots::getCurrentAnnounceDrawData() {
     announceData.addElement(STIM_COLOR_B, blue->getValue().getFloat());
     announceData.addElement(ALPHA_MULTIPLIER, alpha->getValue().getFloat());
     announceData.addElement(DIRECTION, direction->getValue().getFloat());
-    announceData.addElement(SPEED, speed->getValue().getFloat());
+    announceData.addElement(SPEED, currentSpeed);
     announceData.addElement(COHERENCE, currentCoherence);
     announceData.addElement(LIFETIME, currentLifetime);
-    announceData.addElement("num_dots", long(numDots));
+    announceData.addElement("num_dots", long(currentNumDots));
     
     if (announceDots->getValue().getBool()) {
         Datum dotsData(reinterpret_cast<char *>(&(dotPositions[0])), dotPositions.size() * sizeof(GLfloat));

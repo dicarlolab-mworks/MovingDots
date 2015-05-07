@@ -46,12 +46,10 @@ protected:
     void stopPlaying() MW_OVERRIDE;
     
 private:
-    bool computeNumDots();
-    void computeDotSizeToPixels(shared_ptr<StimulusDisplay> display);
-    void initializeDots(GLint startIndex = 0);
+    void updateParameters();
     void updateDots();
-    void replaceDot(GLint i, GLfloat age);
     void advanceDot(GLint i, GLfloat dt, GLfloat dr);
+    void replaceDot(GLint i, GLfloat direction, GLfloat age);
     
     GLfloat rand(GLfloat min, GLfloat max) {
         const boost::uniform_real<GLfloat> randDist(min, max);
@@ -64,16 +62,16 @@ private:
     GLfloat& getDirection(GLint i) { return dotDirections[i]; }
     GLfloat& getAge(GLint i) { return dotAges[i]; }
     
-    GLfloat newDirection() {
-        if ((currentCoherence == 0.0f) || ((currentCoherence != 1.0f) && (rand(0.0f, 1.0f) > currentCoherence))) {
+    GLfloat newDirection(GLfloat coherence) {
+        if ((coherence == 0.0f) || ((coherence != 1.0f) && (rand(0.0f, 1.0f) > coherence))) {
             return rand(0.0f, 360.0f);
         }
         return 0.0f;
     }
     
-    GLfloat newAge() {
-        if (currentLifetime != 0.0f) {
-            return rand(0.0f, currentLifetime);
+    GLfloat newAge(GLfloat lifetime) {
+        if (lifetime != 0.0f) {
+            return rand(0.0f, lifetime);
         }
         return 0.0f;
     }
@@ -93,11 +91,13 @@ private:
     shared_ptr<Variable> lifetime;
     shared_ptr<Variable> announceDots;
     
+    GLfloat previousFieldRadius, currentFieldRadius;
+    GLint previousNumDots, currentNumDots;
+    GLfloat previousSpeed, currentSpeed;
+    GLfloat previousCoherence, currentCoherence;
+    GLfloat previousLifetime, currentLifetime;
+    
     std::vector<GLfloat> dotSizeToPixels;
-    GLfloat currentFieldRadius;
-    GLint numDots, previousNumDots;
-    GLfloat currentCoherence;
-    GLfloat currentLifetime;
     static const GLint verticesPerDot = 2;
     std::vector<GLfloat> dotPositions;
     std::vector<GLfloat> dotDirections;
