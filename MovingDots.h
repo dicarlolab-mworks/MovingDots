@@ -14,7 +14,8 @@
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
 
-using namespace mw;
+
+BEGIN_NAMESPACE_MW
 
 
 class MovingDots : public StandardDynamicStimulus {
@@ -108,6 +109,9 @@ private:
     MWTime previousTime, currentTime;
     
 };
+
+
+END_NAMESPACE_MW
 
 
 #endif 

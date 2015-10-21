@@ -15,6 +15,9 @@
 #include <boost/math/special_functions/round.hpp>
 
 
+BEGIN_NAMESPACE_MW
+
+
 const std::string MovingDots::FIELD_RADIUS("field_radius");
 const std::string MovingDots::FIELD_CENTER_X("field_center_x");
 const std::string MovingDots::FIELD_CENTER_Y("field_center_y");
@@ -347,6 +350,9 @@ void MovingDots::stopPlaying() {
     StandardDynamicStimulus::stopPlaying();
     previousTime = -1;
 }
+
+
+END_NAMESPACE_MW
 
 
 

@@ -10,6 +10,9 @@
 #include "MovingDots.h"
 
 
+BEGIN_NAMESPACE_MW
+
+
 class MovingDotsPlugin : public Plugin {
 	void registerComponents(shared_ptr<ComponentRegistry> registry) MW_OVERRIDE {
         registry->registerFactory<StandardStimulusFactory, MovingDots>();
@@ -17,7 +20,9 @@ class MovingDotsPlugin : public Plugin {
 };
 
 
-MW_SYMBOL_PUBLIC
 extern "C" Plugin* getPlugin() {
     return new MovingDotsPlugin();
 }
+
+
+END_NAMESPACE_MW
